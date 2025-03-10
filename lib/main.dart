@@ -3,7 +3,7 @@ import 'package:untitled1/pages/bsign_up.dart';
 import 'package:untitled1/pages/login_page.dart';
 import 'package:untitled1/pages/sign_up_page.dart';
 import 'package:untitled1/pages/welcome_page.dart';
-import 'package:untitled1/profile_setup_page.dart';
+import 'package:untitled1/pages/profile_setup_page.dart';
 
 void main() {
   runApp(const MyApp());

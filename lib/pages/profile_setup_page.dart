@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled1/components/buttons.dart';
 
 class ProfileSetupPage extends StatefulWidget {
   @override
@@ -7,16 +8,25 @@ class ProfileSetupPage extends StatefulWidget {
 
 class _ProfileSetupPageState extends State<ProfileSetupPage> {
   List<String> avatarList = [
-    "assets/avatars/avatar1.png",
-    "assets/avatars/avatar2.png",
-    "assets/avatars/avatar3.png",
-    "assets/avatars/avatar4.png",
-    "assets/avatars/avatar5.png",
-    "assets/avatars/avatar6.png",
+    "lib/images/avatar1.jpeg",
+    "lib/images/avatar2.jpg",
+    "lib/images/avatar3.jpg",
+    "lib/images/avatar4.jpeg",
+    "lib/images/avatar5.jpg",
+    "lib/images/avatar6.jpeg",
+    "lib/images/avatar7.jpg",
+    "lib/images/avatar8.jpeg",
+    "lib/images/avatar9.jpg",
+    "lib/images/avatar10.jpeg",
+    "lib/images/avatar11.jpg",
+    "lib/images/avatar12.jpeg",
   ];
 
   String? selectedAvatar;
   final TextEditingController _usernameController = TextEditingController();
+  void navToDash(){
+    Navigator.pushNamed(context, "bsign");
+  }
 
   @override
   void dispose() {
@@ -27,18 +37,25 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(title: Text("Profile Setup")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            //text
             Text(
               "Select an Avatar:",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
             ),
+
             SizedBox(height: 10),
+
+            //list of avatars
             Expanded(
+              flex: 3,
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
@@ -68,7 +85,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                           ),
                           child: CircleAvatar(
                             backgroundImage: AssetImage(avatar),
-                            radius: 40,
+                            radius: 70,
                           ),
                         ),
                         if (isSelected)
@@ -79,28 +96,41 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                 },
               ),
             ),
-            SizedBox(height: 20),
-            Text("Enter Username:",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Enter your username",
+
+            Expanded(
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      hintText: "Enter Username",
+                      hintStyle: TextStyle(color: Colors.white),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.blue)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.green)
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: 30),
+
+                  Center(
+                    child: Buttons(
+                      text: "Finish",
+                      onTap: selectedAvatar != null && _usernameController.text.isNotEmpty ?
+                      navToDash:
+                      null,
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: selectedAvatar != null && _usernameController.text.isNotEmpty
-                    ? () {
-                  // Save profile details and navigate forward
-                  print("Avatar: $selectedAvatar, Username: ${_usernameController.text}");
-                }
-                    : null,
-                child: Text("Continue"),
-              ),
-            ),
+
+
           ],
         ),
       ),
