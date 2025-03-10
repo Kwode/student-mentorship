@@ -72,7 +72,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   Widget build(BuildContext context) {
     List<String> options = widget.userCategory == "Mentor"
         ? ["Business", "Tech", "Entrepreneurship", "Marketing", "Design", "Finance"]
-        : ["Career Growth", "Entrepreneurship", "Networking", "Personal Development"];
+        : ["Business", "Tech", "Entrepreneurship", "Marketing", "Design", "Finance"];
 
     Map<String, String> images = {
       "Business": "lib/images/Business.jpg",
