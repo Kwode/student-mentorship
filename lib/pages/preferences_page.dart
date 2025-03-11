@@ -16,6 +16,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   bool _showScrollbar = false;
 
   void navToBsignUp(){
+
     Navigator.pushNamed(context, "profile");
   }
 
@@ -86,9 +87,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Select Your Interests",
-          style: TextStyle(color: Colors.black),),
-        backgroundColor: Colors.grey
+          "Select Your Interests"),
       ),
       backgroundColor: Colors.black,
       body: GestureDetector(
@@ -149,7 +148,49 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 ),
               ),
             ),
-            Buttons(text: "Continue", onTap: navToBsignUp),
+            Buttons(
+                text: "Continue",
+                onTap: (){
+                  if(selectedPreferences.isEmpty){
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context){
+                          return AlertDialog(
+                            title: Text("Choose A Topic", textAlign: TextAlign.center,),
+                            actions: [
+                              TextButton(
+                                  onPressed: (){
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("OK"),
+                              ),
+                            ],
+                          );
+                        }
+                    );
+                  }else if(selectedPreferences.length < 3){
+                    print("less than 3");
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context){
+                          return AlertDialog(
+                            title: Text("Choose At Least 3 Topics"),
+                            actions: [
+                              TextButton(
+                                  onPressed: (){
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("OK")
+                              ),
+                            ],
+                          );
+                        }
+                    );
+                  }else{
+                    navToBsignUp();
+                  }
+                }
+            ),
             SizedBox(height: 20),
           ],
         ),

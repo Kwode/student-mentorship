@@ -118,13 +118,11 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
         
                     SizedBox(height: 30),
         
-                    Center(
-                      child: Buttons(
-                        text: "Finish",
-                        onTap: selectedAvatar != null && _usernameController.text.isNotEmpty ?
-                        navToDash:
-                        null,
-                      ),
+                    Buttons(
+                      text: "Finish",
+                      onTap: selectedAvatar != null && _usernameController.text.isNotEmpty ?
+                      navToDash:
+                      null,
                     ),
                   ],
                 ),

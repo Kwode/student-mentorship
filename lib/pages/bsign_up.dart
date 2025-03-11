@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/components/buttons.dart';
 import 'package:untitled1/pages/preferences_page.dart';
@@ -11,6 +12,7 @@ class BsignUp extends StatefulWidget {
 
 class _BsignUpState extends State<BsignUp> {
   final _formKey = GlobalKey<FormState>();
+
 
   //controllers for text fields
   final TextEditingController _fullName = TextEditingController();
@@ -32,17 +34,22 @@ class _BsignUpState extends State<BsignUp> {
     super.dispose();
   }
 
-  void _submitForm(){
-    if(_formKey.currentState!.validate()){
-      print("Name:  ${_fullName.text}");
-      print("Name:  ${_email.text}");
-      print("Name:  ${_password.text}");
-      print("Name:  $_selectedCategory");
 
-      Navigator.push(
+  void _submitForm() async{
+    if(_formKey.currentState!.validate()){
+      try {
+        final userCred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _email.text.trim(),
+          password: _password.text.trim(),
+        );
+
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => PreferencesPage(userCategory: _selectedCategory)),
-      );
+        );
+      } on FirebaseAuthException catch (e) {
+        print(e.message);
+      }
     }
   }
 
@@ -171,7 +178,7 @@ class _BsignUpState extends State<BsignUp> {
                         ),
                       ),
                       validator: (value){
-                        if(value == null || value.length < 5){
+                        if(value == null || value.length < 2){
                           return "Password must be at least 6 characters";
                         }
                         return null;
