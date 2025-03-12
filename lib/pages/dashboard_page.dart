@@ -19,8 +19,8 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
 
       body: Center(
-        child: FutureBuilder(
-          future: FirebaseFirestore.instance.collection("userinfo").get(),
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection("userinfo").snapshots(),
           builder: (context, snapshot) {
             return ListView.builder(
               itemCount: 1,

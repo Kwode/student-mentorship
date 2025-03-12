@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:untitled1/components/buttons.dart';
 
 class LoginPage extends StatefulWidget {
@@ -13,6 +14,29 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   void navToSignUp(){
     Navigator.pushNamed(context, "bsign");
+  }
+
+  Future<UserCredential?> signInWithGoogle() async{
+    //begin google sign in process
+    final GoogleSignInAccount? gUser =  await GoogleSignIn().signIn();
+
+
+    //when user cancels
+    if(gUser == null) {
+      return null;
+    }
+
+    //obtain auth details from request
+    final GoogleSignInAuthentication gAuth = await gUser.authentication;
+
+    //create credential for user
+    final credential = GoogleAuthProvider.credential(
+      accessToken: gAuth.accessToken,
+      idToken: gAuth.idToken
+    );
+
+    //sign in user
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   final TextEditingController _email = TextEditingController();
@@ -161,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
 
               //sign in with google
               InkWell(
-                onTap: () {},
+                onTap: signInWithGoogle,
                 borderRadius: BorderRadius.circular(10), // Ensures ripple effect follows shape
                 child: Ink(
                   decoration: BoxDecoration(

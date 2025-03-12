@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/components/buttons.dart';
@@ -25,7 +26,14 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
 
   String? selectedAvatar;
   final TextEditingController _usernameController = TextEditingController();
-  void navToDash(){
+  void navToDash() async{
+    try {
+      await FirebaseFirestore.instance.collection("userinfo").add({
+        "username":_usernameController
+      });
+    } catch (e) {
+      print(e);
+    }
     Navigator.pushNamed(context, "dash");
   }
   
@@ -65,7 +73,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
               ),
         
-              SizedBox(height: 10),
+              SizedBox(height: 30),
         
               //list of avatars
               GridView.builder(

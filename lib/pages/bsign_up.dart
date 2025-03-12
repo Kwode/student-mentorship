@@ -24,8 +24,8 @@ class _BsignUpState extends State<BsignUp> {
   final TextEditingController _dob = TextEditingController();
   DateTime? _selectedDate;
 
-  String _selectedGender = "Male";
-  String _selectedCategory = "Mentee"; //Default form selection
+  String ? _selectedGender ;
+  String ? _selectedCategory; //Default form selection
 
 
   @override
@@ -50,12 +50,15 @@ class _BsignUpState extends State<BsignUp> {
           "name": _fullName.text.trim(),
           "email": _email.text.trim(),
           "date of birth": _dob.text.trim(),
-          "pass": _password.text.trim(),
+          "pass": _password.text.hashCode,
+          "owner": FirebaseAuth.instance.currentUser!.uid,
+          "category": _selectedCategory,
+          "gender": _selectedGender,
         });
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PreferencesPage(userCategory: _selectedCategory)),
+          MaterialPageRoute(builder: (context) => PreferencesPage(userCategory: _selectedCategory!)),
         );
       } on FirebaseAuthException catch (e) {
         print(e.message);

@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:untitled1/components/buttons.dart';
 
 class PreferencesPage extends StatefulWidget {
@@ -11,11 +13,22 @@ class PreferencesPage extends StatefulWidget {
 }
 
 class _PreferencesPageState extends State<PreferencesPage> {
+
   List<String> selectedPreferences = [];
+
+
   final ScrollController _scrollController = ScrollController();
   bool _showScrollbar = false;
 
-  void navToBsignUp(){
+  void navToBsignUp() async{
+    try {
+      await FirebaseFirestore.instance.collection("preferences").add({
+        "preferences": selectedPreferences
+      });
+    }catch (e) {
+      print(e);
+    }
+    print(selectedPreferences);
 
     Navigator.pushNamed(context, "profile");
   }
@@ -71,6 +84,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
   @override
   Widget build(BuildContext context) {
+
     List<String> options = widget.userCategory == "Mentor"
         ? ["Business", "Tech", "Entrepreneurship", "Marketing", "Design", "Finance"]
         : ["Business", "Tech", "Entrepreneurship", "Marketing", "Design", "Finance"];
