@@ -12,8 +12,11 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
 
-  void navToLogin(){
+  void navToBsign(){
     Navigator.pushNamed(context, "bsign");
+  }
+  void navToLogin(){
+    Navigator.pushNamed(context, "signin");
   }
 
   @override
@@ -46,7 +49,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
               SizedBox(height: 60,),
 
-              Buttons(text: "Get Started", onTap: navToLogin),
+              Buttons(text: "Get Started", onTap: navToBsign),
 
               SizedBox(height: 20,),
 

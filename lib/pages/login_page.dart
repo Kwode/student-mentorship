@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled1/components/buttons.dart';
@@ -11,7 +12,32 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   void navToSignUp(){
-    Navigator.pushNamed(context, "signup");
+    Navigator.pushNamed(context, "bsign");
+  }
+
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+
+  void signIn() async{
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+            child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _email.text.trim(),
+          password: _password.text.trim()
+      );
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+    }
   }
 
   @override
@@ -24,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
           child: ListView(
             children: [
               SizedBox(height: 110,),
-              //text
+              // sign in text
               Text(
                 textAlign: TextAlign.center,
                   "Sign In",
@@ -36,8 +62,9 @@ class _LoginPageState extends State<LoginPage> {
 
               SizedBox(height: 50,),
 
-              //text fields
+              //email
               TextField(
+                controller: _email,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -59,7 +86,9 @@ class _LoginPageState extends State<LoginPage> {
 
               SizedBox(height: 40,),
 
+              //password
               TextField(
+                controller: _password,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -82,6 +111,7 @@ class _LoginPageState extends State<LoginPage> {
 
               SizedBox(height: 20,),
 
+              //forgot password
               GestureDetector(
                 onTap: (){},
                 child: Text(
@@ -97,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 40,),
 
               //sign in button
-              Buttons(text: "Sign In", onTap: (){}),
+              Buttons(text: "Sign In", onTap: signIn),
 
               SizedBox(height: 40,),
 
@@ -170,6 +200,7 @@ class _LoginPageState extends State<LoginPage> {
 
               SizedBox(height: 20,),
 
+              //not yet registered?
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

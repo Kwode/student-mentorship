@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/components/buttons.dart';
 
@@ -25,7 +26,11 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
   String? selectedAvatar;
   final TextEditingController _usernameController = TextEditingController();
   void navToDash(){
-    Navigator.pushNamed(context, "bsign");
+    Navigator.pushNamed(context, "dash");
+  }
+  
+  void logOut() async{
+    FirebaseAuth.instance.signOut();
   }
 
   @override
@@ -38,7 +43,15 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(title: Text("Profile Setup")),
+      appBar: AppBar(
+          title: Text("Profile Setup"),
+        actions: [
+          IconButton(
+              onPressed: logOut, 
+              icon: Icon(Icons.logout)
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

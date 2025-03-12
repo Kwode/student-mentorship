@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled1/components/buttons.dart';
 import 'package:untitled1/pages/preferences_page.dart';
 
@@ -25,6 +27,7 @@ class _BsignUpState extends State<BsignUp> {
   String _selectedGender = "Male";
   String _selectedCategory = "Mentee"; //Default form selection
 
+
   @override
   void dispose(){
     _fullName.dispose();
@@ -35,13 +38,20 @@ class _BsignUpState extends State<BsignUp> {
   }
 
 
-  void _submitForm() async{
+  Future<void> _submitForm() async{
     if(_formKey.currentState!.validate()){
       try {
         final userCred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _email.text.trim(),
           password: _password.text.trim(),
         );
+
+        await FirebaseFirestore.instance.collection("userinfo").add({
+          "name": _fullName.text.trim(),
+          "email": _email.text.trim(),
+          "date of birth": _dob.text.trim(),
+          "pass": _password.text.trim(),
+        });
 
         Navigator.push(
           context,
@@ -63,7 +73,19 @@ class _BsignUpState extends State<BsignUp> {
           padding: const EdgeInsets.all(12.0),
           child: ListView(
             children: [
-              SizedBox(height: 100,),
+              SizedBox(height: 70,),
+
+            Text(
+              "Sign Up",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.tiroTamil(
+                color: Colors.white,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            SizedBox(height: 50,),
 
             Form(
               key: _formKey,
@@ -107,7 +129,7 @@ class _BsignUpState extends State<BsignUp> {
                       },
                     ),
 
-                    SizedBox(height: 40,),
+                    SizedBox(height: 30,),
 
                     //Email
                     TextFormField(
@@ -147,7 +169,7 @@ class _BsignUpState extends State<BsignUp> {
                       // },
                     ),
 
-                    SizedBox(height: 40,),
+                    SizedBox(height: 30,),
 
                     //password
                     TextFormField(
@@ -185,7 +207,7 @@ class _BsignUpState extends State<BsignUp> {
                       },
                     ),
 
-                    SizedBox(height: 40,),
+                    SizedBox(height: 30,),
 
                     //confirm password
                     TextFormField(
@@ -221,7 +243,7 @@ class _BsignUpState extends State<BsignUp> {
                       },
                     ),
 
-                    SizedBox(height: 40,),
+                    SizedBox(height: 30,),
 
                     //Gender selector
                     DropdownButtonFormField<String>(
@@ -256,7 +278,7 @@ class _BsignUpState extends State<BsignUp> {
                         }
                     ),
 
-                    SizedBox(height: 40,),
+                    SizedBox(height: 30,),
 
 
                     //Dropdown to select mentor or mentee
@@ -292,7 +314,7 @@ class _BsignUpState extends State<BsignUp> {
                         }
                     ),
 
-                    SizedBox(height: 40,),
+                    SizedBox(height: 30,),
 
                     //Date of Birth
                     TextFormField(
@@ -421,7 +443,10 @@ class _BsignUpState extends State<BsignUp> {
 
                     SizedBox(height: 40,),
 
-                    Buttons(text: "Next", onTap: _submitForm),
+                    Buttons(text: "Next", onTap: () async
+                    {
+                      _submitForm();
+                    }),
                   ],
                 )
             ),
