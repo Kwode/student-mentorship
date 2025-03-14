@@ -46,11 +46,11 @@ class _BsignUpState extends State<BsignUp> {
           password: _password.text.trim(),
         );
 
-        await FirebaseFirestore.instance.collection("userinfo").add({
+        // Store user info using their UID as the document ID
+        await FirebaseFirestore.instance.collection("userinfo").doc(userCred.user!.uid).set({
           "name": _fullName.text.trim(),
           "email": _email.text.trim(),
           "date of birth": _dob.text.trim(),
-          "pass": _password.text.hashCode,
           "owner": FirebaseAuth.instance.currentUser!.uid,
           "category": _selectedCategory,
           "gender": _selectedGender,

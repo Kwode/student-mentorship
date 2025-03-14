@@ -49,5 +49,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx") // Example: Firebase Analytics
     implementation("com.google.firebase:firebase-auth-ktx") // Firebase Authentication
     implementation("com.google.firebase:firebase-firestore-ktx") // Firestore Database
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }
 

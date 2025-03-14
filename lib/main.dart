@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
             );
           }
           if(snapshot.data != null){
-            return ProfileSetupPage();
+            return DashboardPage();
           }
           return LoginPage();
         }

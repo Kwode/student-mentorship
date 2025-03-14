@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:untitled1/components/buttons.dart';
@@ -22,7 +23,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
   void navToBsignUp() async{
     try {
-      await FirebaseFirestore.instance.collection("preferences").add({
+      await FirebaseFirestore.instance.collection("preferences").doc(FirebaseAuth.instance.currentUser!.uid).set({
         "preferences": selectedPreferences
       });
     }catch (e) {

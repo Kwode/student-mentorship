@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:untitled1/components/buttons.dart';
+import 'package:untitled1/pages/dashboard_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,51 +18,66 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.pushNamed(context, "bsign");
   }
 
-  Future<UserCredential?> signInWithGoogle() async{
-    //begin google sign in process
-    final GoogleSignInAccount? gUser =  await GoogleSignIn().signIn();
+  Future<void> signInWithGoogle(BuildContext context) async{
+    try {
+      //begin google sign in process
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
+      //obtain auth details from request
+      final GoogleSignInAuthentication? gAuth = await gUser?.authentication;
 
-    //when user cancels
-    if(gUser == null) {
-      return null;
+      //create credential for user
+      if (gAuth?.accessToken != null && gAuth?.idToken != null) {
+        final credential = GoogleAuthProvider.credential(
+            accessToken: gAuth?.accessToken,
+            idToken: gAuth?.idToken
+        );
+
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+        Navigator.pushNamed(context, "dash");
+      }
+    }on FirebaseAuthException catch(e){
+      print(e);
     }
 
-    //obtain auth details from request
-    final GoogleSignInAuthentication gAuth = await gUser.authentication;
-
-    //create credential for user
-    final credential = GoogleAuthProvider.credential(
-      accessToken: gAuth.accessToken,
-      idToken: gAuth.idToken
-    );
-
-    //sign in user
-    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
-  void signIn() async{
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Center(
-            child: CircularProgressIndicator(),
-        );
-      },
-    );
-
+  Future<void> signIn(String email, String password) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _email.text.trim(),
-          password: _password.text.trim()
-      );
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      print(e.message);
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      String uid = userCredential.user!.uid; // Get user ID
+
+      print("Logged in successfully: $uid");
+
+      // 🔹 Check if the user exists in Firestore
+      await checkUserExists(uid);
+
+      // 🔹 Navigate to Dashboard after login
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DashboardPage()),
+        );
+      }
+    } catch (e) {
+      print("Error during sign-in: $e");
+    }
+  }
+
+
+  Future<void> checkUserExists(String uid) async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    if (!userDoc.exists) {
+      print("User not found in Firestore!");
+    } else {
+      print("User exists in Firestore: ${userDoc.data()}");
     }
   }
 
@@ -151,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 40,),
 
               //sign in button
-              Buttons(text: "Sign In", onTap: signIn),
+              Buttons(text: "Sign In", onTap: () => signIn(_email.text, _password.text)),
 
               SizedBox(height: 40,),
 
@@ -185,7 +202,9 @@ class _LoginPageState extends State<LoginPage> {
 
               //sign in with google
               InkWell(
-                onTap: signInWithGoogle,
+                onTap: (){
+                  signInWithGoogle(context);
+                },
                 borderRadius: BorderRadius.circular(10), // Ensures ripple effect follows shape
                 child: Ink(
                   decoration: BoxDecoration(

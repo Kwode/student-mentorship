@@ -27,13 +27,10 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
   String? selectedAvatar;
   final TextEditingController _usernameController = TextEditingController();
   void navToDash() async{
-    try {
-      await FirebaseFirestore.instance.collection("userinfo").add({
-        "username":_usernameController
-      });
-    } catch (e) {
-      print(e);
-    }
+    await FirebaseFirestore.instance.collection("userinfo").doc(FirebaseAuth.instance.currentUser!.uid).update({
+      "imageUrl": selectedAvatar,
+      "username": _usernameController.text.trim()
+    });
     Navigator.pushNamed(context, "dash");
   }
   
@@ -141,9 +138,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
         
                     Buttons(
                       text: "Finish",
-                      onTap: selectedAvatar != null && _usernameController.text.isNotEmpty ?
-                      navToDash:
-                      null,
+                      onTap: navToDash
                     ),
                   ],
                 ),
