@@ -2,30 +2,45 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:untitled1/pages/bsign_up.dart';
+import 'package:untitled1/pages/mentee_dashboard.dart';
+import 'package:untitled1/pages/mentor_dashboard.dart';
 
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key, this.userId});
-
-  final String? userId;
+  const DashboardPage({super.key});
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  Future<String?> getUserCategory () async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance.collection("userinfo").doc(user.uid).get();
+
+        return doc.exists ? doc.data()!["category"] ?? "Unknown" : "unknown";
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    String? uid = widget.userId ?? FirebaseAuth.instance.currentUser?.uid;
-    print(uid);
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text("Dashboard"),
+        automaticallyImplyLeading: false,
+        title: Text("Home"),
         actions: [
           IconButton(
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
+
+                if (!mounted) return; // Prevents errors if widget is disposed
+
+                Navigator.pushReplacementNamed(context, "signin"); // Ensure a fresh start
               },
               icon: Icon(Icons.logout)
           ),
@@ -34,35 +49,17 @@ class _DashboardPageState extends State<DashboardPage> {
 
 
       body: FutureBuilder(
-          future: FirebaseFirestore.instance.collection("userinfo").doc(uid).get(),
+          future: getUserCategory(),
           builder: (context, snapshot){
             if(snapshot.connectionState == ConnectionState.waiting){
               return Center(child: CircularProgressIndicator(),);
             }
-            if (snapshot.hasError) {
-              return Center(child: Text("Error: ${snapshot.error}", style: TextStyle(color: Colors.white, fontSize: 40),));
+            if (!snapshot.hasData || snapshot.data == "Unknown") {
+              return BsignUp(); // Redirect if category is missing
             }
-            if (!snapshot.hasData || snapshot.data == null || !snapshot.data!.exists) {
-              return Center(child: Text("User not found", style: TextStyle(color: Colors.white, fontSize: 40),));
-            }
-
-            Map<String, dynamic>? data = snapshot.data!.data() as Map<String, dynamic>?;
-
-            if (data == null) {
-              return Center(child: Text("No data available", style: TextStyle(color: Colors.white, fontSize: 40),));
-            }
-
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundImage: data["imageUrl"] != null
-                ? NetworkImage(data["imageUrl"]) as ImageProvider
-                    : AssetImage("lib/images/avatar10.jpeg"),
-              ),
-              title: Text(
-                data["email"] ?? "Unknown User",
-                style: TextStyle(color: Colors.white),
-              ),
-            );
+            return snapshot.data == "Mentor"
+                ? MentorDashboard()
+                : MenteeDashboard();
           }
       ),
     );

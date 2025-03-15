@@ -21,9 +21,11 @@ class _PreferencesPageState extends State<PreferencesPage> {
   final ScrollController _scrollController = ScrollController();
   bool _showScrollbar = false;
 
+  String? uid = FirebaseAuth.instance.currentUser!.uid;
+
   void navToBsignUp() async{
     try {
-      await FirebaseFirestore.instance.collection("preferences").doc(FirebaseAuth.instance.currentUser!.uid).set({
+      await FirebaseFirestore.instance.collection("userinfo").doc(uid).update({
         "preferences": selectedPreferences
       });
     }catch (e) {

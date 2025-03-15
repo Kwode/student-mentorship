@@ -4,6 +4,8 @@ import 'package:untitled1/firebase_options.dart';
 import 'package:untitled1/pages/bsign_up.dart';
 import 'package:untitled1/pages/dashboard_page.dart';
 import 'package:untitled1/pages/login_page.dart';
+import 'package:untitled1/pages/mentee_dashboard.dart';
+import 'package:untitled1/pages/mentor_dashboard.dart';
 import 'package:untitled1/pages/sign_up_page.dart';
 import 'package:untitled1/pages/welcome_page.dart';
 import 'package:untitled1/pages/profile_setup_page.dart';
@@ -46,6 +48,8 @@ class MyApp extends StatelessWidget {
         "bsign": (context) => BsignUp(),
         "profile": (context) => ProfileSetupPage(),
         "dash": (context) => DashboardPage(),
+        "mentor": (context) => MentorDashboard(),
+        "mentee": (context) => MenteeDashboard(),
       },
     );
   }

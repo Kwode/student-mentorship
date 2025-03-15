@@ -26,6 +26,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
 
   String? selectedAvatar;
   final TextEditingController _usernameController = TextEditingController();
+
   void navToDash() async{
     await FirebaseFirestore.instance.collection("userinfo").doc(FirebaseAuth.instance.currentUser!.uid).update({
       "imageUrl": selectedAvatar,
