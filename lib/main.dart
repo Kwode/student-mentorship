@@ -10,6 +10,8 @@ import 'package:untitled1/pages/sign_up_page.dart';
 import 'package:untitled1/pages/welcome_page.dart';
 import 'package:untitled1/pages/profile_setup_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,22 +29,41 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StreamBuilder(
+      home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return Center(
-              child: CircularProgressIndicator(),
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData && snapshot.data != null) {
+            // User is logged in, check role
+            return FutureBuilder<DocumentSnapshot>(
+              future: FirebaseFirestore.instance
+                  .collection("users") // Ensure this matches Firestore collection
+                  .doc(snapshot.data!.uid)
+                  .get(),
+              builder: (context, userSnapshot) {
+                if (userSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (userSnapshot.hasData && userSnapshot.data!.exists) {
+                  String category = userSnapshot.data!.get("category");
+                  if (category == "Mentor") {
+                    return MentorDashboard();
+                  } else {
+                    return MenteeDashboard();
+                  }
+                } else {
+                  return ProfileSetupPage(); // If user has no profile, send to setup
+                }
+              },
             );
+          } else {
+            return const LoginPage(); // Not logged in
           }
-          if(snapshot.data != null){
-            return DashboardPage();
-          }else if(snapshot.data == null){
-            return LoginPage();
-          }
-          return WelcomePage();
-        }
+        },
       ),
+
 
       routes: {
         "signin": (context) => LoginPage(),
