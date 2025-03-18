@@ -37,8 +37,10 @@ class MyApp extends StatelessWidget {
           }
           if(snapshot.data != null){
             return DashboardPage();
+          }else if(snapshot.data == null){
+            return LoginPage();
           }
-          return LoginPage();
+          return WelcomePage();
         }
       ),
 
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
         "dash": (context) => DashboardPage(),
         "mentor": (context) => MentorDashboard(),
         "mentee": (context) => MenteeDashboard(),
+        "welcome": (context) => WelcomePage(),
       },
     );
   }

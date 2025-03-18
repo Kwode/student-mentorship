@@ -24,12 +24,12 @@ class _MentorDashboardState extends State<MentorDashboard> {
     return Scaffold(
       backgroundColor: Colors.black,
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(25.0),
+        padding: const EdgeInsets.all(5.0),
         child: GNav(
           tabBorderRadius: 20,
-            tabBackgroundColor: Colors.grey.shade900,
+            //tabBackgroundColor: Colors.grey.shade900,
             gap: 9,
-            color: Colors.blue,
+            color: Colors.white,
             activeColor: Colors.blue,
             selectedIndex: _selectedIndex,
               padding: EdgeInsets.all(16),
@@ -45,18 +45,18 @@ class _MentorDashboardState extends State<MentorDashboard> {
                 ),
 
                 GButton(
+                  icon: Icons.people,
+                  text: "Search",
+                ),
+
+                GButton(
+                  icon: Icons.explore,
+                  text: "Discover",
+                ),
+
+                GButton(
                   icon: Icons.dashboard,
                   text: "Dashboard",
-                ),
-
-                GButton(
-                  icon: Icons.person,
-                  text: "Profile",
-                ),
-
-                GButton(
-                  icon: Icons.settings,
-                  text: "Settings",
                 ),
               ],
           ),

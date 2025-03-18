@@ -18,6 +18,10 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.pushNamed(context, "bsign");
   }
 
+  bool _isObscured = true;
+
+
+  //function for google sign in
   Future<void> signInWithGoogle(BuildContext context) async{
     try {
       //begin google sign in process
@@ -129,12 +133,18 @@ class _LoginPageState extends State<LoginPage> {
 
               //password
               TextField(
+
                 controller: _password,
                 style: TextStyle(
                   color: Colors.white,
                 ),
-                obscureText: true,
+                obscureText: _isObscured,
                 decoration: InputDecoration(
+                  suffixIcon: IconButton(onPressed: (){
+                    setState(() {
+                      _isObscured = !_isObscured;
+                    });
+                  }, icon: Icon(_isObscured ? Icons.visibility : Icons.visibility_off)),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.blue, width: 2), //Default border color
                       borderRadius: BorderRadius.circular(10),

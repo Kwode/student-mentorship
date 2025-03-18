@@ -40,7 +40,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
                 if (!mounted) return; // Prevents errors if widget is disposed
 
-                Navigator.pushReplacementNamed(context, "signin"); // Ensure a fresh start
+                Navigator.pushReplacementNamed(context, "welcome"); // Ensure a fresh start
               },
               icon: Icon(Icons.logout)
           ),
