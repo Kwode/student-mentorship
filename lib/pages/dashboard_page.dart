@@ -18,10 +18,8 @@ class _DashboardPageState extends State<DashboardPage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final doc = await FirebaseFirestore.instance.collection("userinfo").doc(user.uid).get();
-
         return doc.exists ? doc.data()!["category"] ?? "Unknown" : "unknown";
     }
-
     return null;
   }
 
@@ -30,22 +28,20 @@ class _DashboardPageState extends State<DashboardPage> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text("Home"),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-
-                if (!mounted) return; // Prevents errors if widget is disposed
-
-                Navigator.pushReplacementNamed(context, "welcome"); // Ensure a fresh start
-              },
-              icon: Icon(Icons.logout)
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   title: Text("Home"),
+      //   actions: [
+      //     IconButton(
+      //         onPressed: () async {
+      //           await FirebaseAuth.instance.signOut();
+      //           if (!mounted) return; // Prevents errors if widget is disposed
+      //           Navigator.pushReplacementNamed(context, "welcome"); // Ensure a fresh start
+      //         },
+      //         icon: Icon(Icons.logout)
+      //     ),
+      //   ],
+      // ),
 
 
       body: FutureBuilder(

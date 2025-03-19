@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:random_avatar/random_avatar.dart';
+import 'package:untitled1/pages/mentor/home_page.dart';
 
 class MentorDashboard extends StatefulWidget {
   MentorDashboard({super.key});
@@ -15,7 +16,7 @@ class _MentorDashboardState extends State<MentorDashboard> {
   int _selectedIndex = 1;
 
   final List _pages = [
-    Center(child: Text("Home", style: GoogleFonts.tiroTamil(color: Colors.white, fontSize: 40),),),
+    HomePage(),
     Center(child: Text("Dashboard", style: GoogleFonts.tiroTamil(color: Colors.white, fontSize: 40),),),
     Center(child: Text("Profile", style: GoogleFonts.tiroTamil(color: Colors.white, fontSize: 40),),),
     Center(child: Text("Settings", style: GoogleFonts.tiroTamil(color: Colors.white, fontSize: 40),),),
