@@ -103,8 +103,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Select Your Interests"),
+        title: Text("Select Your Interests"),
       ),
       backgroundColor: Colors.black,
       body: GestureDetector(

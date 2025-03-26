@@ -5,6 +5,8 @@ import 'package:untitled1/pages/bsign_up.dart';
 import 'package:untitled1/pages/dashboard_page.dart';
 import 'package:untitled1/pages/login_page.dart';
 import 'package:untitled1/pages/mentee_dashboard.dart';
+import 'package:untitled1/pages/mentor/home_page.dart';
+import 'package:untitled1/pages/mentor/mentor_dashboard_page.dart';
 import 'package:untitled1/pages/mentor_dashboard.dart';
 import 'package:untitled1/pages/sign_up_page.dart';
 import 'package:untitled1/pages/welcome_page.dart';
@@ -39,7 +41,7 @@ class MyApp extends StatelessWidget {
             // User is logged in, check role
             return FutureBuilder<DocumentSnapshot>(
               future: FirebaseFirestore.instance
-                  .collection("users") // Ensure this matches Firestore collection
+                  .collection("userinfo") // Ensure this matches Firestore collection
                   .doc(snapshot.data!.uid)
                   .get(),
               builder: (context, userSnapshot) {
@@ -50,17 +52,13 @@ class MyApp extends StatelessWidget {
                   String category = userSnapshot.data!.get("category");
                   if (category == "Mentor") {
                     return MentorDashboard();
-                  } else {
-                    return MenteeDashboard();
                   }
-                } else {
-                  return ProfileSetupPage(); // If user has no profile, send to setup
                 }
+                return MenteeDashboard();
               },
             );
-          } else {
-            return const LoginPage(); // Not logged in
           }
+          return HomePage();
         },
       ),
 
@@ -74,6 +72,7 @@ class MyApp extends StatelessWidget {
         "mentor": (context) => MentorDashboard(),
         "mentee": (context) => MenteeDashboard(),
         "welcome": (context) => WelcomePage(),
+        "mentordash": (context) => MentorDashboardPage(),
       },
     );
   }

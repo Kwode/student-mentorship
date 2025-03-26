@@ -59,10 +59,10 @@ class _LoginPageState extends State<LoginPage> {
 
       print("Logged in successfully: $uid");
 
-      // 🔹 Check if the user exists in Firestore
+      //Check if the user exists in Firestore
       await checkUserExists(uid);
 
-      // 🔹 Navigate to Dashboard after login
+      //Navigate to Dashboard after login
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -133,7 +133,6 @@ class _LoginPageState extends State<LoginPage> {
 
               //password
               TextField(
-
                 controller: _password,
                 style: TextStyle(
                   color: Colors.white,

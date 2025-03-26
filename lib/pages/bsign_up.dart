@@ -14,7 +14,7 @@ class BsignUp extends StatefulWidget {
 
 class _BsignUpState extends State<BsignUp> {
   final _formKey = GlobalKey<FormState>();
-
+  bool _isObscured = true;
 
   //controllers for text fields
   final TextEditingController _fullName = TextEditingController();
@@ -34,6 +34,7 @@ class _BsignUpState extends State<BsignUp> {
     _email.dispose();
     _password.dispose();
     _confirmPassword.dispose();
+    _dob.dispose();
     super.dispose();
   }
 
@@ -51,7 +52,7 @@ class _BsignUpState extends State<BsignUp> {
           "name": _fullName.text.trim(),
           "email": _email.text.trim(),
           "date of birth": _dob.text.trim(),
-          "owner": FirebaseAuth.instance.currentUser!.uid,
+          "owner": userCred.user!.uid.trim(),
           "category": _selectedCategory,
           "gender": _selectedGender,
         });
@@ -79,7 +80,7 @@ class _BsignUpState extends State<BsignUp> {
               SizedBox(height: 70,),
 
             Text(
-              "Sign Up",
+              "Create An Account",
               textAlign: TextAlign.center,
               style: GoogleFonts.tiroTamil(
                 color: Colors.white,
@@ -179,12 +180,18 @@ class _BsignUpState extends State<BsignUp> {
                       style: TextStyle(
                         color: Colors.white
                       ),
-                      obscureText: true,
                       controller: _password,
+                      obscureText: _isObscured,
                       decoration: InputDecoration(
-                        hintText: "Password",
-                        hintStyle: TextStyle(color: Colors.white),
-
+                          hintText: "Enter Password",
+                          hintStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                        suffixIcon: IconButton(onPressed: (){
+                          setState(() {
+                            _isObscured = !_isObscured;
+                          });
+                        }, icon: Icon(_isObscured ? Icons.visibility : Icons.visibility_off)),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.blue, width: 2),
@@ -203,7 +210,7 @@ class _BsignUpState extends State<BsignUp> {
                         ),
                       ),
                       validator: (value){
-                        if(value == null || value.length < 2){
+                        if(value == null || value.length < 6){
                           return "Password must be at least 6 characters";
                         }
                         return null;
@@ -218,9 +225,15 @@ class _BsignUpState extends State<BsignUp> {
                       obscureText: true,
                       controller: _confirmPassword,
                       decoration: InputDecoration(
-                        labelText: "Confirm Password",
-                        labelStyle: TextStyle(color: Colors.white),
-
+                        hintText: "Confirm Password",
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                        suffixIcon: IconButton(onPressed: (){
+                          setState(() {
+                            _isObscured = !_isObscured;
+                          });
+                        }, icon: Icon(_isObscured ? Icons.visibility : Icons.visibility_off)),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.blue, width: 2),
@@ -271,7 +284,7 @@ class _BsignUpState extends State<BsignUp> {
                         ),
                         dropdownColor: Colors.black,
                         icon: Icon(Icons.arrow_drop_down_circle_outlined),
-                        items: ["Male", "Female", "Others"].map((category){
+                        items: ["Male", "Female"].map((category){
                           return DropdownMenuItem(value: category, child: Text(category));
                         }).toList(),
                         onChanged: (value){

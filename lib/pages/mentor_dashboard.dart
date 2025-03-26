@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:random_avatar/random_avatar.dart';
+import 'package:untitled1/pages/mentee/mentee_dashboard_page.dart';
 import 'package:untitled1/pages/mentor/home_page.dart';
+import 'package:untitled1/pages/mentor/mentor_dashboard_page.dart';
 
 class MentorDashboard extends StatefulWidget {
   MentorDashboard({super.key});
@@ -13,13 +15,13 @@ class MentorDashboard extends StatefulWidget {
 }
 
 class _MentorDashboardState extends State<MentorDashboard> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   final List _pages = [
     HomePage(),
-    Center(child: Text("Dashboard", style: GoogleFonts.tiroTamil(color: Colors.white, fontSize: 40),),),
+    Center(child: Text("Explore", style: GoogleFonts.tiroTamil(color: Colors.white, fontSize: 40),),),
     Center(child: Text("Profile", style: GoogleFonts.tiroTamil(color: Colors.white, fontSize: 40),),),
-    Center(child: Text("Settings", style: GoogleFonts.tiroTamil(color: Colors.white, fontSize: 40),),),
+    MentorDashboardPage(),
   ];
 
   @override
@@ -54,7 +56,7 @@ class _MentorDashboardState extends State<MentorDashboard> {
 
                 GButton(
                   icon: Icons.explore,
-                  text: "Discover",
+                  text: "Explore",
                 ),
 
                 GButton(
