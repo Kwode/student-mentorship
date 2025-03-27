@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:random_avatar/random_avatar.dart';
-import 'package:untitled1/pages/mentee/mentee_dashboard_page.dart';
 import 'package:untitled1/pages/mentor/home_page.dart';
 import 'package:untitled1/pages/mentor/mentor_dashboard_page.dart';
 
 class MentorDashboard extends StatefulWidget {
-  MentorDashboard({super.key});
+  const MentorDashboard({super.key});
 
 
   @override
