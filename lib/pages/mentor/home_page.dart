@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
       body: FutureBuilder(
           future: FirebaseFirestore.instance.collection("userinfo").doc(userId).get(),
           builder: (context, snapshots){
-            if(snapshots.connectionState == ConnectionState){
+            if(snapshots.connectionState == ConnectionState.waiting){
               return Center(child: CircularProgressIndicator(),);
             }
             if(!snapshots.hasData || !snapshots.data!.exists){

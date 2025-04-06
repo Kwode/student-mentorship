@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:random_avatar/random_avatar.dart';
+import 'package:untitled1/pages/mentor/user_profile_page.dart';
 
 
 class ExplorePage extends StatefulWidget {
@@ -12,6 +13,11 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
+
+  void navToProfile(){
+
+  }
+
   @override
   Widget build(BuildContext context) {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
@@ -44,54 +50,66 @@ class _ExplorePageState extends State<ExplorePage> {
                 ),
 
               //display users
+
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance.collection("userinfo").snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
+                    stream: FirebaseFirestore.instance.collection("userinfo").snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                        return Center(
+                          child: Text("No users found",
+                              style: TextStyle(color: Colors.white)),
+                        );
+                      }
 
-                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return Center(
-                        child: Text("No users found", style: TextStyle(color: Colors.white)),
+                      return ListView(
+                        children: snapshot.data!.docs.map<Widget>((doc) => _buildUserList(doc)).toList(),
                       );
                     }
-
-                    final users = snapshot.data!.docs;
-
-                    return ListView.builder(
-                      itemCount: users.length,
-                      itemBuilder: (context, index) {
-                        final user = users[index];
-                        final username = user['name'];
-                        final role = user['category'];
-                        final image = user["imageUrl"];
-
-                        return Card(
-                          color: Colors.grey[900],
-                          child: ListTile(
-                            trailing: Icon(Icons.arrow_forward_ios),
-                            leading: CircleAvatar(
-                              child: RandomAvatar(
-                                image, // fallback if imageUrl is null
-                                width: 40,
-                                height: 40,
-                              ),
-                            ),
-                            title: Text(username, style: TextStyle(color: Colors.white)),
-                            subtitle: Text(role.toUpperCase(), style: TextStyle(color: Colors.grey)),
-                          ),
-                        );
-                      },
-                    );
-                  },
                 ),
-              )
-
+              ),
             ],
         ),
+
+
       ),
     );
+  }
+  Widget _buildUserList(DocumentSnapshot document){
+    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+    final username = data['name'] ?? 'No Name';
+    final role = data['category'] ?? 'Unknown';
+    final image = data['imageUrl'];
+
+    if (FirebaseAuth.instance.currentUser!.email != data["email"]){
+      return Card(
+        color: Colors.grey[900],
+        child: ListTile(
+          onTap: (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserProfilePage(username: username, image: image,),
+                )
+            );
+          },
+          trailing: Icon(Icons.arrow_forward_ios),
+          leading: CircleAvatar(
+            child: RandomAvatar(
+              image,
+              width: 40,
+              height: 40,
+            ),
+          ),
+          title: Text(username, style: TextStyle(color: Colors.white)),
+          subtitle: Text(role.toUpperCase(), style: TextStyle(color: Colors.grey)),
+        ),
+      );
+    }else{
+      return Container();
+    }
   }
 }

@@ -7,6 +7,7 @@ import 'package:untitled1/pages/login_page.dart';
 import 'package:untitled1/pages/mentee_dashboard.dart';
 import 'package:untitled1/pages/mentor/home_page.dart';
 import 'package:untitled1/pages/mentor/mentor_dashboard_page.dart';
+import 'package:untitled1/pages/mentor/user_profile_page.dart';
 import 'package:untitled1/pages/mentor_dashboard.dart';
 import 'package:untitled1/pages/sign_up_page.dart';
 import 'package:untitled1/pages/welcome_page.dart';

@@ -20,7 +20,9 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text("Dashboard"),
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.black,
+        title: Text("Dashboard", style: TextStyle(color: Colors.white),),
       ),
 
       //drawer
