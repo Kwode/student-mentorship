@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:untitled1/pages/mentor/explore_page.dart';
 import 'package:untitled1/pages/mentor/home_page.dart';
 import 'package:untitled1/pages/mentor/mentor_dashboard_page.dart';
 
@@ -17,7 +18,7 @@ class _MentorDashboardState extends State<MentorDashboard> {
 
   final List _pages = [
     HomePage(),
-    Center(child: Text("Explore", style: GoogleFonts.tiroTamil(color: Colors.white, fontSize: 40),),),
+    ExplorePage(),
     Center(child: Text("Profile", style: GoogleFonts.tiroTamil(color: Colors.white, fontSize: 40),),),
     MentorDashboardPage(),
   ];
@@ -27,7 +28,7 @@ class _MentorDashboardState extends State<MentorDashboard> {
     return Scaffold(
       backgroundColor: Colors.black,
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.only(bottom: 20.0, left: 5, right: 5),
         child: GNav(
           tabBorderRadius: 20,
             //tabBackgroundColor: Colors.grey.shade900,

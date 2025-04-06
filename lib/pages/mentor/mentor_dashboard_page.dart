@@ -19,6 +19,45 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Text("Dashboard"),
+      ),
+
+      //drawer
+      drawer: Drawer(
+        backgroundColor: Colors.black,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                DrawerHeader(child: Icon(Icons.person, size: 40, color: Colors.white,),),
+
+                SizedBox(height: 20,),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ListTile(title: Text("HOME", style: TextStyle(color: Colors.white),), onTap: (){}, leading: Icon(Icons.home, color: Colors.white,),),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ListTile(title: Text("HOME", style: TextStyle(color: Colors.white),), onTap: (){}, leading: Icon(Icons.home, color: Colors.white,),),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ListTile(title: Text("HOME", style: TextStyle(color: Colors.white)), onTap: (){}, leading: Icon(Icons.home, color: Colors.white,),),
+                ),
+              ],
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: ListTile(title: Text("SIGN OUT", style: TextStyle(color: Colors.white)), onTap: signOUt, leading: Icon(Icons.logout, color: Colors.white,),),
+            ),
+          ],
+        ),
+      ),
+      
       body: Center(
         child: Buttons(text: "Logout", onTap: signOUt),
       ),

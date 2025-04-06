@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String userId = FirebaseAuth.instance.currentUser!.uid;
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -25,7 +25,6 @@ class HomePage extends StatelessWidget {
             if(!snapshots.hasData || !snapshots.data!.exists){
               return Center(child: Text("No data found"),);
             }
-
             return Padding(
               padding: const EdgeInsets.only(top: 70.0, left: 15, right: 15),
               child: Column(
@@ -33,7 +32,7 @@ class HomePage extends StatelessWidget {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Welcome, ${snapshots.data!["username"]}",
+                        Text("Welcome, ${snapshots.data?["username"]}",
                           style: GoogleFonts.tiroTamil(
                               color: Colors.white, fontSize: 25,
                               fontWeight: FontWeight.bold
@@ -46,7 +45,7 @@ class HomePage extends StatelessWidget {
                           },
                           child: CircleAvatar(
                             radius: 25,
-                            child: RandomAvatar(snapshots.data!["imageUrl"], width: 100, height: 100),
+                            child: RandomAvatar(snapshots.data?["imageUrl"], width: 100, height: 100),
                           ),
                         ),
                       ],
