@@ -83,6 +83,7 @@ class _ExplorePageState extends State<ExplorePage> {
     final username = data['name'] ?? 'No Name';
     final role = data['category'] ?? 'Unknown';
     final image = data['imageUrl'];
+    final uid = data['owner'];
 
     if (FirebaseAuth.instance.currentUser!.email != data["email"]){
       return Card(
@@ -92,7 +93,11 @@ class _ExplorePageState extends State<ExplorePage> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => UserProfilePage(username: username, image: image,),
+                  builder: (context) => UserProfilePage(
+                    username: username,
+                    image: image,
+                    receiverId: uid,
+                  ),
                 )
             );
           },
