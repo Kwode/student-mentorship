@@ -82,7 +82,7 @@ class _ExplorePageState extends State<ExplorePage> {
     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
     final username = data['name'] ?? 'No Name';
     final role = data['category'] ?? 'Unknown';
-    final image = data['imageUrl'];
+    final image = data['imageUrl'] ?? "saytoonz";
     final uid = data['owner'];
 
     if (FirebaseAuth.instance.currentUser!.email != data["email"]){
