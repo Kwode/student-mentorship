@@ -39,7 +39,13 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
 
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0),
-                  child: ListTile(title: Text("HOME", style: TextStyle(color: Colors.white),), onTap: (){}, leading: Icon(Icons.home, color: Colors.white,),),
+                  child: ListTile(
+                    title: Text("PROFILE", style: TextStyle(color: Colors.white),),
+                    onTap: (){
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, "mentorprofile");
+                      },
+                    leading: Icon(Icons.person, color: Colors.white,),),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0),
@@ -59,7 +65,7 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
           ],
         ),
       ),
-      
+
       body: Center(
         child: Buttons(text: "Logout", onTap: signOUt),
       ),

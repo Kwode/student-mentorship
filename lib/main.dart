@@ -4,9 +4,10 @@ import 'package:untitled1/firebase_options.dart';
 import 'package:untitled1/pages/bsign_up.dart';
 import 'package:untitled1/pages/dashboard_page.dart';
 import 'package:untitled1/pages/login_page.dart';
-import 'package:untitled1/pages/mentee_dashboard.dart';
+import 'package:untitled1/pages/mentee/mentee_me.dart';
 import 'package:untitled1/pages/mentor/home_page.dart';
 import 'package:untitled1/pages/mentor/mentor_dashboard_page.dart';
+import 'package:untitled1/pages/mentor/mentor_profile_page.dart';
 import 'package:untitled1/pages/mentor/user_profile_page.dart';
 import 'package:untitled1/pages/mentor_dashboard.dart';
 import 'package:untitled1/pages/sign_up_page.dart';
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
                     return MentorDashboard();
                   }
                 }
-                return MenteeDashboard();
+                return MenteeMe();
               },
             );
           }
@@ -71,9 +72,10 @@ class MyApp extends StatelessWidget {
         "profile": (context) => ProfileSetupPage(),
         "dash": (context) => DashboardPage(),
         "mentor": (context) => MentorDashboard(),
-        "mentee": (context) => MenteeDashboard(),
+        "mentee": (context) => MenteeMe(),
         "welcome": (context) => WelcomePage(),
         "mentordash": (context) => MentorDashboardPage(),
+        "mentorprofile": (context) => MentorProfilePage(),
       },
     );
   }

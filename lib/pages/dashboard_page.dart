@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled1/pages/bsign_up.dart';
-import 'package:untitled1/pages/mentee_dashboard.dart';
+import 'package:untitled1/pages/mentee/mentee_me.dart';
 import 'package:untitled1/pages/mentor_dashboard.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -55,7 +55,7 @@ class _DashboardPageState extends State<DashboardPage> {
             }
             return snapshot.data == "Mentor"
                 ? MentorDashboard()
-                : MenteeDashboard();
+                : MenteeMe();
           }
       ),
     );

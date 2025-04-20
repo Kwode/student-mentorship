@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
 
                         GestureDetector(
                           onTap: (){
-                            Navigator.pushNamed(context, "mentordash");
+                            Navigator.pushNamed(context, "mentorprofile");
                           },
                           child: CircleAvatar(
                             radius: 25,
@@ -109,9 +109,7 @@ class HomePage extends StatelessWidget {
 
                   //Posts
                   SizedBox(
-                    height: 100,
-                      child: Expanded(child: Posts()
-                      )
+                    height: 100,child: Posts()
                   ),
 
                   SizedBox(height: 35,),

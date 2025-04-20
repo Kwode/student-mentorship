@@ -21,6 +21,8 @@ class _BsignUpState extends State<BsignUp> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
+  final TextEditingController _level = TextEditingController();
+  final TextEditingController _dept = TextEditingController();
   final TextEditingController _dob = TextEditingController();
   DateTime? _selectedDate;
 
@@ -55,6 +57,8 @@ class _BsignUpState extends State<BsignUp> {
           "owner": userCred.user!.uid.trim(),
           "category": _selectedCategory,
           "gender": _selectedGender,
+          "level": _level.text,
+          "dept": _dept.text,
         });
 
         Navigator.push(
@@ -163,14 +167,68 @@ class _BsignUpState extends State<BsignUp> {
                         ),
                       ),
                       keyboardType: TextInputType.emailAddress,
-                      // validator: (value){
-                      //   if(value == null || value.isEmpty){
-                      //     return "Please enter your email";
-                      //   } else if(!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z{2,4}]$').hasMatch(value)){
-                      //     return "Enter a valid email address";
-                      //   }
-                      //   return null;
-                      // },
+                    ),
+
+                    SizedBox(height: 30,),
+
+                    TextFormField(
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
+                      controller: _level,
+                      decoration: InputDecoration(
+                        labelText: "Level",
+                        labelStyle: TextStyle(color: Colors.white),
+
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.blue, width: 2),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.green, width: 2),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.red, width: 2),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.red, width: 2),
+                        ),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+
+                    SizedBox(height: 30,),
+
+                    TextFormField(
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
+                      controller: _dept,
+                      decoration: InputDecoration(
+                        labelText: "Department",
+                        labelStyle: TextStyle(color: Colors.white),
+
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.blue, width: 2),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.green, width: 2),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.red, width: 2),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.red, width: 2),
+                        ),
+                      ),
+                      keyboardType: TextInputType.name,
                     ),
 
                     SizedBox(height: 30,),

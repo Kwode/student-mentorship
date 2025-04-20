@@ -9,66 +9,62 @@ class CategorySelection extends StatefulWidget {
 
 class _CategorySelectionState extends State<CategorySelection> {
   final user = FirebaseAuth.instance.currentUser;
-
-  // Future<String?> getCategory () async {
-  //   if (user != null) {
-  //     final doc = await FirebaseFirestore.instance.collection("userinfo").doc(user.uid).get();
-  //     return doc.exists ? doc.data()!["category"] ?? "Unknown" : "unknown";
-  //   }
-  //   return null;
-  //
+  String? selectedCategory;
 
   @override
   Widget build(BuildContext context) {
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: FutureBuilder(
+      child: FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance.collection("userinfo").doc(user!.uid).get(),
-        builder:(context, snapshots){
-          String selectedCategory = "${snapshots.data!["preferences"][0]}"; // Default selected category
-
-          final List<dynamic> categories = snapshots.data!["preferences"];
-
-          if(snapshots.connectionState == ConnectionState){
-            return Center(child: CircularProgressIndicator(),);
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
           }
-          if(!snapshots.hasData || !snapshots.data!.exists){
-            return Center(child: Text("No data found"),);
+
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return Center(child: Text("No data found", style: TextStyle(color: Colors.white)));
+          }
+
+          final data = snapshot.data!.data() as Map<String, dynamic>;
+          final List<dynamic> categories = data["preferences"] ?? [];
+
+          // Ensure selectedCategory is initialized after data is fetched
+          if (selectedCategory == null && categories.isNotEmpty) {
+            selectedCategory = categories[0];
           }
 
           return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: categories.map((category) {
-            bool isSelected = category == selectedCategory;
-            return Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedCategory = category;
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: isSelected ? Colors.blue : Colors.grey[900],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    category,
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.white70,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+            children: categories.map((category) {
+              final isSelected = category == selectedCategory;
+              return Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedCategory = category;
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: isSelected ? Colors.blue : Colors.grey[900],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      category,
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : Colors.white70,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }).toList(),
-        );
-       }
+              );
+            }).toList(),
+          );
+        },
       ),
     );
   }
