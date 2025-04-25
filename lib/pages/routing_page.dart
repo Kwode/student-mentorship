@@ -14,6 +14,7 @@ class DashboardPage extends StatefulWidget {
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
+
 class _DashboardPageState extends State<DashboardPage> {
   Future<String?> getUserCategory() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -51,7 +52,7 @@ class _DashboardPageState extends State<DashboardPage> {
         future: getUserCategory(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(color: Colors.blue));
           }
           if (!snapshot.hasData || snapshot.data == "Unknown") {
             return BsignUp(); // Redirect if category is missing

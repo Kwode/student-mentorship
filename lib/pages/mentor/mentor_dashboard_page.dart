@@ -93,7 +93,7 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
             FirebaseFirestore.instance.collection("userinfo").doc(userId).get(),
         builder: (context, snapshots) {
           if (snapshots.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(color: Colors.blue));
           }
           if (!snapshots.hasData || !snapshots.data!.exists) {
             return Center(

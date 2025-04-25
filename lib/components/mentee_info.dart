@@ -118,6 +118,13 @@ class _MenteeInfoState extends State<MenteeInfo> {
 
   @override
   Widget build(BuildContext context) {
+    if (avatarSeed == null || username == null) {
+      return const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(child: CircularProgressIndicator(color: Colors.blue)),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(

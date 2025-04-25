@@ -71,6 +71,13 @@ class _LoginPageState extends State<LoginPage> {
           MaterialPageRoute(builder: (context) => DashboardPage()),
         );
       }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Sign In Successful!"),
+          backgroundColor: Colors.green,
+        ),
+      );
     } catch (e) {
       print("Error during sign-in: $e");
     } finally {

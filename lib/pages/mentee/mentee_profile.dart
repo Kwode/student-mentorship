@@ -284,7 +284,7 @@ class _MenteeProfileState extends State<MenteeProfile> {
     if (username == null || avatarSeed == null) {
       // If data is still being fetched, show loading spinner
       return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: CircularProgressIndicator(color: Colors.blue)),
       );
     }
 

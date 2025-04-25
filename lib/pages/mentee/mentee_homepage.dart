@@ -43,7 +43,7 @@ class _MenteeHomePageState extends State<MenteeHomepage> {
     if (username == null || avatarSeed == null) {
       return Scaffold(
         backgroundColor: Colors.black,
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: CircularProgressIndicator(color: Colors.blue)),
       );
     }
 

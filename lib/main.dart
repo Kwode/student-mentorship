@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: Colors.blue));
           }
           if (snapshot.hasData && snapshot.data != null) {
             // User is logged in, check role
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
                       .get(),
               builder: (context, userSnapshot) {
                 if (userSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator(color: Colors.blue));
                 }
                 if (userSnapshot.hasData && userSnapshot.data!.exists) {
                   String category = userSnapshot.data!.get("category");

@@ -60,7 +60,7 @@ class _MenteeChatRoomState extends State<MenteeChatRoom> {
           future: FirebaseFirestore.instance.collection("userinfo").doc(userId).get(),
           builder: (context, snapshots){
             if(snapshots.connectionState == ConnectionState.waiting){
-              return Center(child: CircularProgressIndicator(),);
+              return Center(child: CircularProgressIndicator(color: Colors.blue),);
             }
             if(!snapshots.hasData || !snapshots.data!.exists){
               return Center(child: Text("No data found"),);
@@ -153,7 +153,7 @@ class _MenteeChatRoomState extends State<MenteeChatRoom> {
     return StreamBuilder(stream: _chatService.getMessages(widget.receiverId, FirebaseAuth.instance.currentUser!.uid),
         builder: (context, snapshot){
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(color: Colors.blue));
           }
 
           return ListView(

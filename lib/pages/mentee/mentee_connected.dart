@@ -11,96 +11,125 @@ class Connected extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
-    return StreamBuilder<QuerySnapshot>(
-      stream:
-          FirebaseFirestore.instance
-              .collection('connections')
-              .where('from', isEqualTo: currentUserId)
-              .where('status', isEqualTo: 'connected')
-              .snapshots(),
-      builder: (context, connectionSnapshot) {
-        if (connectionSnapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    // Streams for both directions of connection
+    final fromStream =
+        FirebaseFirestore.instance
+            .collection('connections')
+            .where('from', isEqualTo: currentUserId)
+            .where('status', isEqualTo: 'connected')
+            .snapshots();
 
-        if (!connectionSnapshot.hasData ||
-            connectionSnapshot.data!.docs.isEmpty) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: fromStream,
+      builder: (context, fromSnapshot) {
+        if (fromSnapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: Text(
-              "No connected mentors yet.",
-              style: TextStyle(color: Colors.white),
-            ),
+            child: CircularProgressIndicator(color: Colors.blue),
           );
         }
 
-        final connections = connectionSnapshot.data!.docs;
+        final fromConnections = fromSnapshot.data?.docs ?? [];
 
-        return ListView.builder(
-          itemCount: connections.length,
-          itemBuilder: (context, index) {
-            final mentorId =
-                connections[index]['to']; // changed from 'from' to 'to'
+        return StreamBuilder<QuerySnapshot>(
+          stream:
+              FirebaseFirestore.instance
+                  .collection('connections')
+                  .where('to', isEqualTo: currentUserId)
+                  .where('status', isEqualTo: 'connected')
+                  .snapshots(),
+          builder: (context, toSnapshot) {
+            if (toSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(color: Colors.blue),
+              );
+            }
 
-            return FutureBuilder<DocumentSnapshot>(
-              future:
-                  FirebaseFirestore.instance
-                      .collection('userinfo')
-                      .doc(mentorId)
-                      .get(),
-              builder: (context, mentorSnapshot) {
-                if (mentorSnapshot.connectionState == ConnectionState.waiting) {
-                  return const ListTile(
-                    title: Text(
-                      "Loading...",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  );
-                }
+            final toConnections = toSnapshot.data?.docs ?? [];
 
-                if (!mentorSnapshot.hasData || !mentorSnapshot.data!.exists) {
-                  return const ListTile(
-                    title: Text(
-                      "Mentor not found",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  );
-                }
+            // Combine both connections (and avoid duplicates)
+            final allConnections =
+                [
+                  ...fromConnections.map((doc) => doc['to']),
+                  ...toConnections.map((doc) => doc['from']),
+                ].toSet().toList(); // remove duplicates
 
-                final data =
-                    mentorSnapshot.data!.data() as Map<String, dynamic>;
-                final name = data['name'] ?? 'No Name';
-                final category = data['category'] ?? '';
-                final image = data['imageUrl'] ?? 'saytoonz';
+            if (allConnections.isEmpty) {
+              return const Center(
+                child: Text(
+                  "No connections yet.",
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            }
 
-                return Card(
-                  color: Colors.grey[900],
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      child: RandomAvatar(image, width: 40, height: 40),
-                    ),
-                    title: Text(
-                      name,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    subtitle: Text(
-                      category.toUpperCase(),
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    trailing: const Icon(Icons.chat, color: Colors.white70),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => MenteeChatRoom(
-                                username: name,
-                                image: image,
-                                receiverId: mentorId,
-                              ),
+            return ListView.builder(
+              itemCount: allConnections.length,
+              itemBuilder: (context, index) {
+                final userId = allConnections[index];
+
+                return FutureBuilder<DocumentSnapshot>(
+                  future:
+                      FirebaseFirestore.instance
+                          .collection('userinfo')
+                          .doc(userId)
+                          .get(),
+                  builder: (context, userSnapshot) {
+                    if (userSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const ListTile(
+                        title: Text(
+                          "Loading...",
+                          style: TextStyle(color: Colors.white),
                         ),
                       );
-                    },
-                  ),
+                    }
+
+                    if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
+                      return const ListTile(
+                        title: Text(
+                          "User not found",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    }
+
+                    final data =
+                        userSnapshot.data!.data() as Map<String, dynamic>;
+                    final name = data['name'] ?? 'No Name';
+                    final category = data['category'] ?? '';
+                    final image = data['imageUrl'] ?? 'saytoonz';
+
+                    return Card(
+                      color: Colors.grey[900],
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          child: RandomAvatar(image, width: 40, height: 40),
+                        ),
+                        title: Text(
+                          name,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          category.toUpperCase(),
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                        trailing: const Icon(Icons.chat, color: Colors.white70),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => MenteeChatRoom(
+                                    username: name,
+                                    image: image,
+                                    receiverId: userId,
+                                  ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
                 );
               },
             );

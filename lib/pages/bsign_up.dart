@@ -82,7 +82,7 @@ class _BsignUpState extends State<BsignUp> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              "Account created! Please verify your email before proceeding.",
+              "Account created!",
             ),
             backgroundColor: Colors.green,
           ),
