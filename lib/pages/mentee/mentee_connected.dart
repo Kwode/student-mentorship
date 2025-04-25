@@ -12,17 +12,19 @@ class Connected extends StatelessWidget {
     final currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('connections')
-          .where('to', isEqualTo: currentUserId)
-          .where('status', isEqualTo: 'connected')
-          .snapshots(),
+      stream:
+          FirebaseFirestore.instance
+              .collection('connections')
+              .where('from', isEqualTo: currentUserId)
+              .where('status', isEqualTo: 'connected')
+              .snapshots(),
       builder: (context, connectionSnapshot) {
         if (connectionSnapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (!connectionSnapshot.hasData || connectionSnapshot.data!.docs.isEmpty) {
+        if (!connectionSnapshot.hasData ||
+            connectionSnapshot.data!.docs.isEmpty) {
           return const Center(
             child: Text(
               "No connected mentors yet.",
@@ -36,13 +38,15 @@ class Connected extends StatelessWidget {
         return ListView.builder(
           itemCount: connections.length,
           itemBuilder: (context, index) {
-            final mentorId = connections[index]['from'];
+            final mentorId =
+                connections[index]['to']; // changed from 'from' to 'to'
 
             return FutureBuilder<DocumentSnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection('userinfo')
-                  .doc(mentorId)
-                  .get(),
+              future:
+                  FirebaseFirestore.instance
+                      .collection('userinfo')
+                      .doc(mentorId)
+                      .get(),
               builder: (context, mentorSnapshot) {
                 if (mentorSnapshot.connectionState == ConnectionState.waiting) {
                   return const ListTile(
@@ -62,7 +66,8 @@ class Connected extends StatelessWidget {
                   );
                 }
 
-                final data = mentorSnapshot.data!.data() as Map<String, dynamic>;
+                final data =
+                    mentorSnapshot.data!.data() as Map<String, dynamic>;
                 final name = data['name'] ?? 'No Name';
                 final category = data['category'] ?? '';
                 final image = data['imageUrl'] ?? 'saytoonz';
@@ -86,11 +91,12 @@ class Connected extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MenteeChatRoom(
-                            username: name,
-                            image: image,
-                            receiverId: mentorId,
-                          ),
+                          builder:
+                              (context) => MenteeChatRoom(
+                                username: name,
+                                image: image,
+                                receiverId: mentorId,
+                              ),
                         ),
                       );
                     },
