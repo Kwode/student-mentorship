@@ -5,23 +5,21 @@ import 'package:untitled1/pages/bsign_up.dart';
 import 'package:untitled1/pages/dashboard_page.dart';
 import 'package:untitled1/pages/login_page.dart';
 import 'package:untitled1/pages/mentee/mentee_me.dart';
+import 'package:untitled1/pages/mentee/mentee_navpage.dart';
 import 'package:untitled1/pages/mentor/home_page.dart';
 import 'package:untitled1/pages/mentor/mentor_dashboard_page.dart';
 import 'package:untitled1/pages/mentor/mentor_profile_page.dart';
-import 'package:untitled1/pages/mentor/user_profile_page.dart';
-import 'package:untitled1/pages/mentor_dashboard.dart';
+import 'package:untitled1/pages/mentor/mentor_chat_room.dart';
+import 'package:untitled1/pages/mentor/mentor_navpage.dart';
 import 'package:untitled1/pages/sign_up_page.dart';
 import 'package:untitled1/pages/welcome_page.dart';
 import 'package:untitled1/pages/profile_setup_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -42,10 +40,13 @@ class MyApp extends StatelessWidget {
           if (snapshot.hasData && snapshot.data != null) {
             // User is logged in, check role
             return FutureBuilder<DocumentSnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection("userinfo") // Ensure this matches Firestore collection
-                  .doc(snapshot.data!.uid)
-                  .get(),
+              future:
+                  FirebaseFirestore.instance
+                      .collection(
+                        "userinfo",
+                      ) // Ensure this matches Firestore collection
+                      .doc(snapshot.data!.uid)
+                      .get(),
               builder: (context, userSnapshot) {
                 if (userSnapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -53,17 +54,16 @@ class MyApp extends StatelessWidget {
                 if (userSnapshot.hasData && userSnapshot.data!.exists) {
                   String category = userSnapshot.data!.get("category");
                   if (category == "Mentor") {
-                    return MentorDashboard();
+                    return MentorNavpage();
                   }
                 }
-                return MenteeMe();
+                return MenteeNavigation();
               },
             );
           }
-          return MentorDashboard();
+          return MentorNavpage();
         },
       ),
-
 
       routes: {
         "signin": (context) => LoginPage(),
@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
         "bsign": (context) => BsignUp(),
         "profile": (context) => ProfileSetupPage(),
         "dash": (context) => DashboardPage(),
-        "mentor": (context) => MentorDashboard(),
+        "mentor": (context) => MentorNavpage(),
         "mentee": (context) => MenteeMe(),
         "welcome": (context) => WelcomePage(),
         "mentordash": (context) => MentorDashboardPage(),

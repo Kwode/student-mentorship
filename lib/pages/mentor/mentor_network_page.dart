@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:untitled1/pages/mentor/mentor_chat_room.dart';
 
-class MenteeNetworkPage extends StatefulWidget {
-  const MenteeNetworkPage({super.key});
+class MentorNetworkPage extends StatefulWidget {
+  const MentorNetworkPage({super.key});
 
   @override
-  State<MenteeNetworkPage> createState() => _MenteeNetworkPageState();
+  State<MentorNetworkPage> createState() => _MentorNetworkPageState();
 }
 
-class _MenteeNetworkPageState extends State<MenteeNetworkPage> {
+class _MentorNetworkPageState extends State<MentorNetworkPage> {
   TextEditingController searchController = TextEditingController();
   List<DocumentSnapshot> allUsers = [];
   List<DocumentSnapshot> filteredUsers = [];

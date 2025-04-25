@@ -21,17 +21,16 @@ class _BsignUpState extends State<BsignUp> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
-  final TextEditingController _level = TextEditingController();
-  final TextEditingController _dept = TextEditingController();
+  // final TextEditingController _level = TextEditingController();
+  // final TextEditingController _dept = TextEditingController();
   final TextEditingController _dob = TextEditingController();
   DateTime? _selectedDate;
 
-  String ? _selectedGender ;
-  String ? _selectedCategory; //Default form selection
-
+  String? _selectedGender;
+  String? _selectedCategory; //Default form selection
 
   @override
-  void dispose(){
+  void dispose() {
     _fullName.dispose();
     _email.dispose();
     _password.dispose();
@@ -40,33 +39,69 @@ class _BsignUpState extends State<BsignUp> {
     super.dispose();
   }
 
-
-  Future<void> _submitForm() async{
-    if(_formKey.currentState!.validate()){
-      try {
-        final userCred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _email.text.trim(),
-          password: _password.text.trim(),
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      if (_selectedGender == null || _selectedCategory == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please select gender and category.'),
+            backgroundColor: Colors.red,
+          ),
         );
+        return;
+      }
 
-        // Store user info using their UID as the document ID
-        await FirebaseFirestore.instance.collection("userinfo").doc(userCred.user!.uid).set({
-          "name": _fullName.text.trim(),
-          "email": _email.text.trim(),
-          "date of birth": _dob.text.trim(),
-          "owner": userCred.user!.uid.trim(),
-          "category": _selectedCategory,
-          "gender": _selectedGender,
-          "level": _level.text,
-          "dept": _dept.text,
-        });
+      try {
+        final userCred = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+              email: _email.text.trim(),
+              password: _password.text.trim(),
+            );
+
+        // Send verification email
+        await userCred.user!.sendEmailVerification();
+
+        // Example placeholder avatar URL (customize or use an avatar generator)
+        const defaultAvatarUrl =
+            "https://api.dicebear.com/7.x/thumbs/svg?seed=newuser";
+
+        await FirebaseFirestore.instance
+            .collection("userinfo")
+            .doc(userCred.user!.uid)
+            .set({
+              "name": _fullName.text.trim(),
+              "email": _email.text.trim(),
+              "date of birth": _dob.text.trim(),
+              "owner": userCred.user!.uid.trim(),
+              "category": _selectedCategory,
+              "gender": _selectedGender,
+              "avatar": defaultAvatarUrl,
+              "emailVerified": false,
+            });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Account created! Please verify your email before proceeding.",
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PreferencesPage(userCategory: _selectedCategory!)),
+          MaterialPageRoute(
+            builder:
+                (context) => PreferencesPage(userCategory: _selectedCategory!),
+          ),
         );
       } on FirebaseAuthException catch (e) {
-        print(e.message);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.message ?? "An error occurred"),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
@@ -81,44 +116,39 @@ class _BsignUpState extends State<BsignUp> {
           padding: const EdgeInsets.all(12.0),
           child: ListView(
             children: [
-              SizedBox(height: 70,),
+              SizedBox(height: 70),
 
-            Text(
-              "Create An Account",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.tiroTamil(
-                color: Colors.white,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+              Text(
+                "Create An Account",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.tiroTamil(
+                  color: Colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
 
-            SizedBox(height: 50,),
+              SizedBox(height: 50),
 
-            Form(
-              key: _formKey,
+              Form(
+                key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
                     //Full Name
                     TextFormField(
-                      style: TextStyle(
-                        color: Colors.white
-                      ),
+                      style: TextStyle(color: Colors.white),
                       controller: _fullName,
                       decoration: InputDecoration(
-                        labelText: "First Name",
-                        labelStyle: TextStyle(
-                          color: Colors.white
-                        ),
+                        labelText: "Full Name",
+                        labelStyle: TextStyle(color: Colors.white),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.blue, width: 2),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.green),
-                          borderRadius: BorderRadius.circular(10)
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -129,21 +159,19 @@ class _BsignUpState extends State<BsignUp> {
                           borderSide: BorderSide(color: Colors.red, width: 2),
                         ),
                       ),
-                      validator: (value){
-                        if(value == null || value.isEmpty){
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
                           return "Please enter your full name";
                         }
                         return null;
                       },
                     ),
 
-                    SizedBox(height: 30,),
+                    SizedBox(height: 30),
 
                     //Email
                     TextFormField(
-                      style: TextStyle(
-                        color: Colors.white
-                      ),
+                      style: TextStyle(color: Colors.white),
                       controller: _email,
                       decoration: InputDecoration(
                         labelText: "Email",
@@ -169,87 +197,28 @@ class _BsignUpState extends State<BsignUp> {
                       keyboardType: TextInputType.emailAddress,
                     ),
 
-                    SizedBox(height: 30,),
-
-                    TextFormField(
-                      style: TextStyle(
-                        color: Colors.white
-                      ),
-                      controller: _level,
-                      decoration: InputDecoration(
-                        labelText: "Level",
-                        labelStyle: TextStyle(color: Colors.white),
-
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.blue, width: 2),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.green, width: 2),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.red, width: 2),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.red, width: 2),
-                        ),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
-
-                    SizedBox(height: 30,),
-
-                    TextFormField(
-                      style: TextStyle(
-                        color: Colors.white
-                      ),
-                      controller: _dept,
-                      decoration: InputDecoration(
-                        labelText: "Department",
-                        labelStyle: TextStyle(color: Colors.white),
-
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.blue, width: 2),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.green, width: 2),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.red, width: 2),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.red, width: 2),
-                        ),
-                      ),
-                      keyboardType: TextInputType.name,
-                    ),
-
-                    SizedBox(height: 30,),
+                    SizedBox(height: 30),
 
                     //password
                     TextFormField(
-                      style: TextStyle(
-                        color: Colors.white
-                      ),
+                      style: TextStyle(color: Colors.white),
                       controller: _password,
                       obscureText: _isObscured,
                       decoration: InputDecoration(
-                          hintText: "Enter Password",
-                          hintStyle: TextStyle(
-                            color: Colors.white,
+                        hintText: "Enter Password",
+                        hintStyle: TextStyle(color: Colors.white),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isObscured = !_isObscured;
+                            });
+                          },
+                          icon: Icon(
+                            _isObscured
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
-                        suffixIcon: IconButton(onPressed: (){
-                          setState(() {
-                            _isObscured = !_isObscured;
-                          });
-                        }, icon: Icon(_isObscured ? Icons.visibility : Icons.visibility_off)),
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.blue, width: 2),
@@ -267,15 +236,15 @@ class _BsignUpState extends State<BsignUp> {
                           borderSide: BorderSide(color: Colors.red, width: 2),
                         ),
                       ),
-                      validator: (value){
-                        if(value == null || value.length < 6){
+                      validator: (value) {
+                        if (value == null || value.length < 6) {
                           return "Password must be at least 6 characters";
                         }
                         return null;
                       },
                     ),
 
-                    SizedBox(height: 30,),
+                    SizedBox(height: 30),
 
                     //confirm password
                     TextFormField(
@@ -284,14 +253,19 @@ class _BsignUpState extends State<BsignUp> {
                       controller: _confirmPassword,
                       decoration: InputDecoration(
                         hintText: "Confirm Password",
-                        hintStyle: TextStyle(
-                          color: Colors.white,
+                        hintStyle: TextStyle(color: Colors.white),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isObscured = !_isObscured;
+                            });
+                          },
+                          icon: Icon(
+                            _isObscured
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
                         ),
-                        suffixIcon: IconButton(onPressed: (){
-                          setState(() {
-                            _isObscured = !_isObscured;
-                          });
-                        }, icon: Icon(_isObscured ? Icons.visibility : Icons.visibility_off)),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.blue, width: 2),
@@ -309,103 +283,112 @@ class _BsignUpState extends State<BsignUp> {
                           borderSide: BorderSide(color: Colors.red, width: 2),
                         ),
                       ),
-                      validator: (value){
-                        if(value == null || _password.text != _confirmPassword.text){
+                      validator: (value) {
+                        if (value == null ||
+                            _password.text != _confirmPassword.text) {
                           return "Password does not match";
                         }
                         return null;
                       },
                     ),
 
-                    SizedBox(height: 30,),
+                    SizedBox(height: 30),
 
                     //Gender selector
                     DropdownButtonFormField<String>(
-                        style: TextStyle(color: Colors.white),
-                        value: _selectedGender,
-                        decoration: InputDecoration(
-                          labelText: "Select Gender",
-                          labelStyle: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white),
+                      value: _selectedGender,
+                      decoration: InputDecoration(
+                        labelText: "Select Gender",
+                        labelStyle: TextStyle(color: Colors.white),
 
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.blue, width: 2),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.green, width: 2),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.red, width: 2),
-                          ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.blue, width: 2),
                         ),
-                        dropdownColor: Colors.black,
-                        icon: Icon(Icons.arrow_drop_down_circle_outlined),
-                        items: ["Male", "Female"].map((category){
-                          return DropdownMenuItem(value: category, child: Text(category));
-                        }).toList(),
-                        onChanged: (value){
-                          setState(() {
-                            _selectedGender = value!;
-                          });
-                        }
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.green, width: 2),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.red, width: 2),
+                        ),
+                      ),
+                      dropdownColor: Colors.black,
+                      icon: Icon(Icons.arrow_drop_down_circle_outlined),
+                      items:
+                          ["Male", "Female"].map((category) {
+                            return DropdownMenuItem(
+                              value: category,
+                              child: Text(category),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedGender = value!;
+                        });
+                      },
                     ),
 
-                    SizedBox(height: 30,),
-
+                    SizedBox(height: 30),
 
                     //Dropdown to select mentor or mentee
                     DropdownButtonFormField<String>(
                       style: TextStyle(color: Colors.white),
                       value: _selectedCategory,
-                        decoration: InputDecoration(
-                          labelText: "Sign Up As",
-                          labelStyle: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: "Sign Up As",
+                        labelStyle: TextStyle(color: Colors.white),
 
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.blue, width: 2),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.green, width: 2),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.red, width: 2),
-                          ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.blue, width: 2),
                         ),
-                        dropdownColor: Colors.black,
-                        icon: Icon(Icons.arrow_drop_down_circle_outlined),
-                        items: ["Mentor", "Mentee"].map((category){
-                          return DropdownMenuItem(value: category,child: Text(category));
-                        }).toList(),
-                        onChanged: (value){
-                          setState(() {
-                            _selectedCategory = value!;
-                          });
-                        }
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.green, width: 2),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.red, width: 2),
+                        ),
+                      ),
+                      dropdownColor: Colors.black,
+                      icon: Icon(Icons.arrow_drop_down_circle_outlined),
+                      items:
+                          ["Mentor", "Mentee"].map((category) {
+                            return DropdownMenuItem(
+                              value: category,
+                              child: Text(category),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCategory = value!;
+                        });
+                      },
                     ),
 
-                    SizedBox(height: 30,),
+                    SizedBox(height: 30),
 
                     //Date of Birth
                     TextFormField(
                       style: TextStyle(color: Colors.white),
                       readOnly: true,
-                      onTap: () async{
+                      onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(1960),
-                            lastDate: DateTime.now()
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(1960),
+                          lastDate: DateTime.now(),
                         );
 
-                        if (pickedDate != null){
+                        if (pickedDate != null) {
                           setState(() {
                             _selectedDate = pickedDate;
-                            _dob.text = "${pickedDate.year}/${pickedDate.month}/${pickedDate.day}";
+                            _dob.text =
+                                "${pickedDate.year}/${pickedDate.month}/${pickedDate.day}";
                           });
                         }
                       },
@@ -416,115 +399,38 @@ class _BsignUpState extends State<BsignUp> {
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.blue, width: 2),
                         ),
-                          focusedBorder: OutlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.blue, width: 2),
                         ),
-                          focusedErrorBorder: OutlineInputBorder(
+                        focusedErrorBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red, width: 2),
                         ),
-                          errorBorder: OutlineInputBorder(
+                        errorBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red, width: 2),
                         ),
-                        suffixIcon: Icon(Icons.calendar_month_outlined)
+                        suffixIcon: Icon(Icons.calendar_month_outlined),
                       ),
 
-                      validator: (value){
-                        if(value == null || value.isEmpty){
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
                           return "Please Select Date of Birth";
                         }
                         return null;
                       },
                     ),
 
-                    //mentor-specific fields
-                    // if(_selectedCategory == "Mentor")...[
-                    //   SizedBox(height: 40,),
-                    //   TextFormField(
-                    //     style: TextStyle(
-                    //         color: Colors.white
-                    //     ),
-                    //     controller: _fullName,
-                    //     decoration: InputDecoration(
-                    //       labelText: "Enter Area of Expertise",
-                    //       labelStyle: TextStyle(
-                    //           color: Colors.white
-                    //       ),
-                    //       enabledBorder: OutlineInputBorder(
-                    //         borderSide: BorderSide(color: Colors.blue, width: 2),
-                    //         borderRadius: BorderRadius.circular(10),
-                    //       ),
-                    //       focusedBorder: OutlineInputBorder(
-                    //           borderSide: BorderSide(color: Colors.green),
-                    //           borderRadius: BorderRadius.circular(10)
-                    //       ),
-                    //       errorBorder: OutlineInputBorder(
-                    //         borderRadius: BorderRadius.circular(10),
-                    //         borderSide: BorderSide(color: Colors.red, width: 2),
-                    //       ),
-                    //       focusedErrorBorder: OutlineInputBorder(
-                    //         borderRadius: BorderRadius.circular(10),
-                    //         borderSide: BorderSide(color: Colors.red, width: 2),
-                    //       ),
-                    //     ),
-                    //     validator: (value){
-                    //       if(value == null || value.isEmpty){
-                    //         return "Please enter your full name";
-                    //       }
-                    //       return null;
-                    //     },
-                    //   ),
-                    //
-                    // ],
-                    //
-                    // if(_selectedCategory == "Mentee")...[
-                    //   SizedBox(height: 40,),
-                    //   TextFormField(
-                    //     style: TextStyle(
-                    //         color: Colors.white
-                    //     ),
-                    //     controller: _fullName,
-                    //     decoration: InputDecoration(
-                    //       labelText: "Enter Area of Interest",
-                    //       labelStyle: TextStyle(
-                    //           color: Colors.white
-                    //       ),
-                    //       enabledBorder: OutlineInputBorder(
-                    //         borderSide: BorderSide(color: Colors.blue, width: 2),
-                    //         borderRadius: BorderRadius.circular(10),
-                    //       ),
-                    //       focusedBorder: OutlineInputBorder(
-                    //           borderSide: BorderSide(color: Colors.green),
-                    //           borderRadius: BorderRadius.circular(10)
-                    //       ),
-                    //       errorBorder: OutlineInputBorder(
-                    //         borderRadius: BorderRadius.circular(10),
-                    //         borderSide: BorderSide(color: Colors.red, width: 2),
-                    //       ),
-                    //       focusedErrorBorder: OutlineInputBorder(
-                    //         borderRadius: BorderRadius.circular(10),
-                    //         borderSide: BorderSide(color: Colors.red, width: 2),
-                    //       ),
-                    //     ),
-                    //     validator: (value){
-                    //       if(value == null || value.isEmpty){
-                    //         return "Please enter your full name";
-                    //       }
-                    //       return null;
-                    //     },
-                    //   ),
-                    //
-                    // ],
+                    SizedBox(height: 40),
 
-                    SizedBox(height: 40,),
-
-                    Buttons(text: "Next", onTap: () async
-                    {
-                      _submitForm();
-                    }),
+                    Buttons(
+                      text: "Next",
+                      onTap: () async {
+                        _submitForm();
+                      },
+                    ),
                   ],
-                )
-            ),
-          ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

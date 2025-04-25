@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled1/pages/bsign_up.dart';
 import 'package:untitled1/pages/mentee/mentee_me.dart';
-import 'package:untitled1/pages/mentor_dashboard.dart';
+import 'package:untitled1/pages/mentee/mentee_navpage.dart';
+import 'package:untitled1/pages/mentor/mentor_navpage.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -14,20 +15,24 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  Future<String?> getUserCategory () async {
+  Future<String?> getUserCategory() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final doc = await FirebaseFirestore.instance.collection("userinfo").doc(user.uid).get();
-        return doc.exists ? doc.data()!["category"] ?? "Unknown" : "unknown";
+      final doc =
+          await FirebaseFirestore.instance
+              .collection("userinfo")
+              .doc(user.uid)
+              .get();
+      return doc.exists ? doc.data()!["category"] ?? "Unknown" : "unknown";
     }
     return null;
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.black,
+
       // appBar: AppBar(
       //   automaticallyImplyLeading: false,
       //   title: Text("Home"),
@@ -42,21 +47,19 @@ class _DashboardPageState extends State<DashboardPage> {
       //     ),
       //   ],
       // ),
-
-
       body: FutureBuilder(
-          future: getUserCategory(),
-          builder: (context, snapshot){
-            if(snapshot.connectionState == ConnectionState.waiting){
-              return Center(child: CircularProgressIndicator(),);
-            }
-            if (!snapshot.hasData || snapshot.data == "Unknown") {
-              return BsignUp(); // Redirect if category is missing
-            }
-            return snapshot.data == "Mentor"
-                ? MentorDashboard()
-                : MenteeMe();
+        future: getUserCategory(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
           }
+          if (!snapshot.hasData || snapshot.data == "Unknown") {
+            return BsignUp(); // Redirect if category is missing
+          }
+          return snapshot.data == "Mentor"
+              ? MentorNavpage()
+              : MenteeNavigation();
+        },
       ),
     );
   }

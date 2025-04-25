@@ -4,6 +4,7 @@ import 'package:untitled1/pages/mentee/mentee_explore.dart';
 import 'package:untitled1/pages/mentee/mentee_homepage.dart';
 import 'package:untitled1/pages/mentee/mentee_me.dart';
 import 'package:untitled1/pages/mentee/mentee_network_page.dart';
+import 'package:untitled1/pages/mentor/mentor_chat_room.dart';
 
 import '../../components/connection.dart';
 
@@ -28,10 +29,7 @@ class _MenteeNavigationState extends State<MenteeNavigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(25.0),
         child: GNav(

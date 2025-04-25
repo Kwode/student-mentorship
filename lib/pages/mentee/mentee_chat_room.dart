@@ -6,17 +6,17 @@ import 'package:random_avatar/random_avatar.dart';
 import 'package:untitled1/components/chat_bubble.dart';
 import 'package:untitled1/models/chat_service.dart';
 
-class UserProfilePage extends StatefulWidget {
+class MenteeChatRoom extends StatefulWidget {
   final String username;
   final String image;
   final String receiverId;
-  const UserProfilePage({super.key, required this.username, required this.image, required this.receiverId});
+  const MenteeChatRoom({super.key, required this.username, required this.image, required this.receiverId});
 
   @override
-  State<UserProfilePage> createState() => _UserProfilePageState();
+  State<MenteeChatRoom> createState() => _MenteeChatRoomState();
 }
 
-class _UserProfilePageState extends State<UserProfilePage> {
+class _MenteeChatRoomState extends State<MenteeChatRoom> {
 
   final TextEditingController _message = TextEditingController();
   final ChatService _chatService = ChatService();

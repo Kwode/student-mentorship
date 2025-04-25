@@ -14,15 +14,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  void navToSignUp(){
+  void navToSignUp() {
     Navigator.pushNamed(context, "bsign");
   }
 
   bool _isObscured = true;
-
+  bool _isLoading = false;
 
   //function for google sign in
-  Future<void> signInWithGoogle(BuildContext context) async{
+  Future<void> signInWithGoogle(BuildContext context) async {
     try {
       //begin google sign in process
       final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
@@ -33,36 +33,38 @@ class _LoginPageState extends State<LoginPage> {
       //create credential for user
       if (gAuth?.accessToken != null && gAuth?.idToken != null) {
         final credential = GoogleAuthProvider.credential(
-            accessToken: gAuth?.accessToken,
-            idToken: gAuth?.idToken
+          accessToken: gAuth?.accessToken,
+          idToken: gAuth?.idToken,
         );
 
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithCredential(credential);
 
         Navigator.pushNamed(context, "dash");
       }
-    }on FirebaseAuthException catch(e){
+    } on FirebaseAuthException catch (e) {
       print(e);
     }
-
   }
 
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
   Future<void> signIn(String email, String password) async {
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
-      String uid = userCredential.user!.uid; // Get user ID
+      String uid = userCredential.user!.uid;
 
       print("Logged in successfully: $uid");
 
-      //Check if the user exists in Firestore
       await checkUserExists(uid);
 
-      //Navigate to Dashboard after login
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -71,12 +73,18 @@ class _LoginPageState extends State<LoginPage> {
       }
     } catch (e) {
       print("Error during sign-in: $e");
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
-
   Future<void> checkUserExists(String uid) async {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
     if (!userDoc.exists) {
       print("User not found in Firestore!");
@@ -94,93 +102,101 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(20.0),
           child: ListView(
             children: [
-              SizedBox(height: 110,),
+              SizedBox(height: 110),
               // sign in text
               Text(
                 textAlign: TextAlign.center,
-                  "Sign In",
-                  style: GoogleFonts.tiroTamil(
-                    color: Colors.white,
-                    fontSize: 40,
-                  )
+                "Sign In",
+                style: GoogleFonts.tiroTamil(color: Colors.white, fontSize: 40),
               ),
 
-              SizedBox(height: 50,),
+              SizedBox(height: 50),
 
               //email
               TextField(
                 controller: _email,
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+                style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 2), //Default border color
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.blue,
+                      width: 2,
+                    ), //Default border color
                     borderRadius: BorderRadius.circular(10),
-                ),
+                  ),
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green, width: 2), //Border color when focused
-                      borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.green,
+                      width: 2,
+                    ), //Border color when focused
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   hintText: "Enter Email",
-                    hintStyle: TextStyle(
-                      color: Colors.white,
-                    )
+                  hintStyle: TextStyle(color: Colors.white),
                 ),
               ),
 
-              SizedBox(height: 40,),
+              SizedBox(height: 40),
 
               //password
               TextField(
                 controller: _password,
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+                style: TextStyle(color: Colors.white),
                 obscureText: _isObscured,
                 decoration: InputDecoration(
-                  suffixIcon: IconButton(onPressed: (){
-                    setState(() {
-                      _isObscured = !_isObscured;
-                    });
-                  }, icon: Icon(_isObscured ? Icons.visibility : Icons.visibility_off)),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 2), //Default border color
-                      borderRadius: BorderRadius.circular(10),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _isObscured = !_isObscured;
+                      });
+                    },
+                    icon: Icon(
+                      _isObscured ? Icons.visibility : Icons.visibility_off,
                     ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.blue,
+                      width: 2,
+                    ), //Default border color
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green, width: 2), //Border color when focused
-                      borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.green,
+                      width: 2,
+                    ), //Border color when focused
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   hintText: "Enter Password",
-                  hintStyle: TextStyle(
-                    color: Colors.white,
-                  )
+                  hintStyle: TextStyle(color: Colors.white),
                 ),
               ),
 
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
 
               //forgot password
               GestureDetector(
-                onTap: (){},
+                onTap: () {},
                 child: Text(
                   textAlign: TextAlign.right,
                   "Forgot Password?",
-                  style: TextStyle(
-                    color: Colors.blue[500],
-                    fontSize: 15
-                  ),
+                  style: TextStyle(color: Colors.blue[500], fontSize: 15),
                 ),
               ),
 
-              SizedBox(height: 40,),
+              SizedBox(height: 40),
 
               //sign in button
-              Buttons(text: "Sign In", onTap: () => signIn(_email.text, _password.text)),
+              Buttons(
+                text: _isLoading ? "Loading..." : "Sign In",
+                onTap:
+                    _isLoading
+                        ? null
+                        : () => signIn(_email.text, _password.text),
+              ),
 
-              SizedBox(height: 40,),
-
+              SizedBox(height: 40),
 
               //"or divider"
               Row(
@@ -188,46 +204,49 @@ class _LoginPageState extends State<LoginPage> {
                   Expanded(
                     child: Divider(
                       color: Colors.grey, // Line color
-                      thickness: 1,       // Line thickness
+                      thickness: 1, // Line thickness
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       "or",
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.grey),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
-                  Expanded(
-                    child: Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                    ),
-                  ),
+                  Expanded(child: Divider(color: Colors.grey, thickness: 1)),
                 ],
               ),
 
-              SizedBox(height: 40,),
+              SizedBox(height: 40),
 
               //sign in with google
               InkWell(
-                onTap: (){
+                onTap: () {
                   signInWithGoogle(context);
                 },
-                borderRadius: BorderRadius.circular(10), // Ensures ripple effect follows shape
+                borderRadius: BorderRadius.circular(
+                  10,
+                ), // Ensures ripple effect follows shape
                 child: Ink(
                   decoration: BoxDecoration(
                     color: Colors.transparent, // Keep background transparent
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: Colors.blue,  // Border color
-                      width: 2,           // Border width
+                      color: Colors.blue, // Border color
+                      width: 2, // Border width
                     ),
                   ),
                   child: Container(
                     height: 50,
                     width: 250, // Increased width to fit text
-                    padding: EdgeInsets.symmetric(horizontal: 10), // Add padding inside
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                    ), // Add padding inside
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -239,10 +258,7 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(width: 10),
                         Text(
                           "Continue with Google",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
+                          style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                       ],
                     ),
@@ -250,7 +266,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
 
               //not yet registered?
               Row(
@@ -258,26 +274,20 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Text(
                     "Not registered yet?",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
 
-                  SizedBox(width: 6,),
+                  SizedBox(width: 6),
 
                   GestureDetector(
                     onTap: navToSignUp,
                     child: Text(
                       "Sign Up",
-                      style: TextStyle(
-                        color: Colors.blue[500],
-                        fontSize: 15,
-                      ),
+                      style: TextStyle(color: Colors.blue[500], fontSize: 15),
                     ),
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),

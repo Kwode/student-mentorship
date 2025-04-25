@@ -1,34 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:untitled1/pages/mentee/connected.dart';
 import 'package:untitled1/pages/mentee/mentee_explore.dart';
 import '../pages/mentee/connection_requests.dart';
 
 class Connections extends StatefulWidget {
   const Connections({super.key});
-  /// This is used in the explore page to navigate between recommended and requests
+
   @override
   State<Connections> createState() => _ConnectionSelection();
 }
 
 class _ConnectionSelection extends State<Connections> {
-  // List of categories
-  final List<String> categories = [
-    "Recommended", "Requests"
-  ];
-
-  // Default selected category
+  final List<String> categories = ["Recommended", "Requests", "Connected"];
   String selectedCategory = "Recommended";
-
-  // Index for selecting which page to display
   int _selectedIndex = 0;
-
-  final List<Widget> _tabs = [
-    ExplorePage(),
-    RequestPage(),
-    // You can add more pages here for each category later if needed.
-  ];
+  String _searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _tabs = [
+      ExplorePage(searchQuery: _searchQuery),
+      RequestPage(),
+      Connected(),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -37,33 +32,35 @@ class _ConnectionSelection extends State<Connections> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Search bar
-              Container(
-                height: 40,
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey[800],
-                ),
-                child: TextField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    hintText: "Search...",
-                    hintStyle: TextStyle(color: Colors.white70),
-                    border: InputBorder.none,
-                    icon: Icon(Icons.search, color: Colors.white),
+              // Search Bar
+              TextField(
+                style: const TextStyle(color: Colors.white),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                  });
+                },
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: const BorderSide(color: Colors.white),
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: const BorderSide(color: Colors.white),
+                  ),
+                  hintText: "Search",
+                  hintStyle: const TextStyle(color: Colors.white70),
+                  suffixIcon: const Icon(Icons.search, color: Colors.white),
                 ),
               ),
 
-              SizedBox(height: 20), // Space between search bar and categories
+              const SizedBox(height: 20),
 
-              // Horizontal categories row
+              // Categories
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: categories.map((category) {
                     bool isSelected = category == selectedCategory;
                     return Padding(
@@ -71,20 +68,20 @@ class _ConnectionSelection extends State<Connections> {
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
-                            selectedCategory = category; // Update selected category
-                            _selectedIndex = categories.indexOf(category); // Update selected index
+                            selectedCategory = category;
+                            _selectedIndex = categories.indexOf(category);
                           });
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                           decoration: BoxDecoration(
-                            color: isSelected ? Color(0xFF80B3FF) : Colors.grey[900],
+                            color: isSelected ? Colors.blue : Colors.grey[900],
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
                             category,
-                            style: TextStyle(
-                              color: isSelected ? Colors.black : Colors.white,
+                            style: const TextStyle(
+                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -96,12 +93,9 @@ class _ConnectionSelection extends State<Connections> {
                 ),
               ),
 
-              SizedBox(height: 30), // Space between categories and page content
+              const SizedBox(height: 30),
 
-
-              Expanded(
-                child: _tabs[_selectedIndex],
-              ),
+              Expanded(child: _tabs[_selectedIndex]),
             ],
           ),
         ),
