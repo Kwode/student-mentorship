@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:untitled1/components/buttons.dart';
-import 'package:untitled1/pages/dashboard_page.dart';
+import 'package:untitled1/pages/routing_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

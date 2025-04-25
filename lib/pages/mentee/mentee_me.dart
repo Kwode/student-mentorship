@@ -31,101 +31,111 @@ class _MenteeMeState extends State<MenteeMe> {
       appBar: AppBar(backgroundColor: Color(0xFF687EFF)),
 
       drawer: Drawer(
-        backgroundColor: Colors.grey[900],
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.black),
-              child: Text(
-                'Dashboard',
-                style: GoogleFonts.tiroTamil(
-                  color: Color(0xFF687EFF),
-                  fontSize: 29,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.person,
-                color: Colors.white,
-              ), // Icon on the left
-              title: Text(
-                'Profile',
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-              onTap: () {
-                Navigator.pop(context); // Close drawer
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MenteeProfile()),
-                );
-              },
-            ),
-
-            ListTile(
-              leading: Icon(Icons.favorite_border, color: Colors.white),
-              title: Text(
-                'Interests',
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-              onTap: () {
-                Navigator.pop(context); // Close drawer
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MenteeInterestsPage(),
+        backgroundColor: Colors.black,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  DrawerHeader(
+                    child: Center(
+                      child: Text(
+                        'Dashboard',
+                        style: GoogleFonts.tiroTamil(
+                          color: Color(0xFF687EFF),
+                          fontSize: 29,
+                        ),
+                      ),
+                    ),
                   ),
-                );
-              },
-            ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    ), // Icon on the left
+                    title: Text(
+                      'Profile',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context); // Close drawer
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MenteeProfile(),
+                        ),
+                      );
+                    },
+                  ),
 
-            ListTile(
-              leading: Icon(Icons.library_books, color: Colors.white),
-              title: Text(
-                'Library',
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-              onTap: () {
-                Navigator.pop(context); // Close drawer
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MenteeProfile()),
-                );
-              },
-            ),
+                  ListTile(
+                    leading: Icon(Icons.favorite_border, color: Colors.white),
+                    title: Text(
+                      'Interests',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context); // Close drawer
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MenteeInterestsPage(),
+                        ),
+                      );
+                    },
+                  ),
 
-            ListTile(
-              leading: Icon(Icons.edit_note, color: Colors.white),
-              title: Text(
-                'Create',
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-              onTap: () {
-                Navigator.pop(context); // Close drawer
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CreatePostPage()),
-                );
-              },
-            ),
+                  ListTile(
+                    leading: Icon(Icons.library_books, color: Colors.white),
+                    title: Text(
+                      'Library',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context); // Close drawer
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MenteeProfile(),
+                        ),
+                      );
+                    },
+                  ),
 
-            ListTile(
-              leading: Icon(Icons.logout, color: Colors.white),
-              title: Text(
-                'Log out',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                  ListTile(
+                    leading: Icon(Icons.edit_note, color: Colors.white),
+                    title: Text(
+                      'Create',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context); // Close drawer
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreatePostPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
-              onTap: () {
-                Navigator.pop(context); // Close drawer
-                FirebaseAuth.instance.signOut();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
-              },
-            ),
-          ],
+
+              ListTile(
+                leading: Icon(Icons.logout, color: Colors.white),
+                title: Text(
+                  'Log out',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                onTap: () {
+                  Navigator.pop(context); // Close drawer
+                  FirebaseAuth.instance.signOut();
+                },
+              ),
+            ],
+          ),
         ),
       ),
 

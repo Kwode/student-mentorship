@@ -174,7 +174,6 @@ class _MenteeProfileState extends State<MenteeProfile> {
 
   void _showEditProfileDialog(BuildContext context) {
     final TextEditingController titleController = TextEditingController();
-    final TextEditingController profileSectionController = TextEditingController();
     final TextEditingController aboutMeController = TextEditingController();
     final TextEditingController departmentController = TextEditingController();
     final TextEditingController levelController = TextEditingController();

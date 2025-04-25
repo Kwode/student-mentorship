@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/firebase_options.dart';
 import 'package:untitled1/pages/bsign_up.dart';
-import 'package:untitled1/pages/dashboard_page.dart';
+import 'package:untitled1/pages/routing_page.dart';
 import 'package:untitled1/pages/login_page.dart';
 import 'package:untitled1/pages/mentee/mentee_me.dart';
 import 'package:untitled1/pages/mentee/mentee_navpage.dart';
@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
               },
             );
           }
-          return MentorNavpage();
+          return LoginPage();
         },
       ),
 

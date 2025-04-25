@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:untitled1/components/chat_bubble.dart';
 import 'package:untitled1/models/chat_service.dart';

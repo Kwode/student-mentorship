@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:untitled1/pages/mentee/mentee_explore.dart';
 import 'package:untitled1/pages/mentee/mentee_homepage.dart';
 import 'package:untitled1/pages/mentee/mentee_me.dart';
 import 'package:untitled1/pages/mentee/mentee_network_page.dart';
-import 'package:untitled1/pages/mentor/mentor_chat_room.dart';
 
 import '../../components/connection.dart';
 
