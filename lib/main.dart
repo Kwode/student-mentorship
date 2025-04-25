@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
         "profile": (context) => ProfileSetupPage(),
         "dash": (context) => DashboardPage(),
         "mentor": (context) => MentorNavpage(),
-        "mentee": (context) => MenteeMe(),
+        "mentee": (context) => MenteeNavigation(),
         "welcome": (context) => WelcomePage(),
         "mentordash": (context) => MentorDashboardPage(),
         "mentorprofile": (context) => MentorProfilePage(),
