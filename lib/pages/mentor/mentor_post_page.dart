@@ -22,7 +22,9 @@ class _MentorPostPageState extends State<MentorPostPage> {
   // Function to delete a post
   Future<void> _deletePost(String postId) async {
     await FirebaseFirestore.instance.collection('posts').doc(postId).delete();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Post deleted')));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Post deleted')));
   }
 
   // Function to navigate to the create post page
@@ -36,12 +38,21 @@ class _MentorPostPageState extends State<MentorPostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Your Posts')),
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.black,
+        title: Text("Your Posts", style: TextStyle(color: Colors.white)),
+      ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('posts')
-            .where('userId', isEqualTo: _userId) // Get posts from the logged-in user
-            .snapshots(),
+        stream:
+            FirebaseFirestore.instance
+                .collection('posts')
+                .where(
+                  'userId',
+                  isEqualTo: _userId,
+                ) // Get posts from the logged-in user
+                .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
@@ -57,13 +68,22 @@ class _MentorPostPageState extends State<MentorPostPage> {
                 leading: CircleAvatar(
                   backgroundColor: Colors.transparent,
                   child: RandomAvatar(
-                    post['userame'], // Generate random avatar based on the user's name/ID
+                    FirebaseAuth
+                        .instance
+                        .currentUser!
+                        .uid, // Generate random avatar based on the user's name/ID
                     width: 40,
                     height: 40,
                   ),
                 ),
-                title: Text(post['title']),
-                subtitle: Text(post['date']),
+                title: Text(
+                  post['title'],
+                  style: TextStyle(color: Colors.white),
+                ),
+                subtitle: Text(
+                  post['date'],
+                  style: TextStyle(color: Colors.grey[700]),
+                ),
                 trailing: IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () => _deletePost(post.id), // Delete the post
@@ -77,8 +97,16 @@ class _MentorPostPageState extends State<MentorPostPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _createPost, // Open create post page
-        child: Icon(Icons.add),
+        backgroundColor: Colors.blue,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreatePostPage(userId: _userId),
+            ),
+          );
+        }, // Open create post page
+        child: Icon(Icons.add, color: Colors.white),
         tooltip: 'Create Post',
       ),
     );

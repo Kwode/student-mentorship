@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore package
 import 'package:random_avatar/random_avatar.dart'; // RandomAvatar package
@@ -7,12 +8,17 @@ class Posts extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection('posts').snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) {
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshots) {
+        if (!snapshots.hasData) {
           return Center(child: CircularProgressIndicator());
         }
+        if (!snapshots.hasData) {
+          return Center(
+            child: Text("No data found", style: TextStyle(color: Colors.white)),
+          );
+        }
 
-        final posts = snapshot.data!.docs;
+        final posts = snapshots.data!.docs;
 
         return ListView.builder(
           scrollDirection: Axis.horizontal,
@@ -20,7 +26,7 @@ class Posts extends StatelessWidget {
           itemBuilder: (context, index) {
             final post = posts[index];
             final userName =
-                post['username']; // Get the user's name or UID from the post
+                post['userName']; // Get the user's name or UID from the post
 
             return Container(
               padding: EdgeInsets.all(10),
@@ -34,7 +40,7 @@ class Posts extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         post['title']!,
@@ -60,7 +66,10 @@ class Posts extends StatelessWidget {
                         radius: 35,
                         backgroundColor: Colors.transparent,
                         child: RandomAvatar(
-                          userName, // Generate a random avatar based on the user's name/ID
+                          FirebaseAuth
+                              .instance
+                              .currentUser!
+                              .uid, // Generate a random avatar based on the user's name/ID
                           width: 70,
                           height: 70,
                         ),

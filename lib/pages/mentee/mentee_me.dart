@@ -114,7 +114,10 @@ class _MenteeMeState extends State<MenteeMe> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreatePostPage(userId: '',),
+                          builder:
+                              (context) => CreatePostPage(
+                                userId: FirebaseAuth.instance.currentUser!.uid,
+                              ),
                         ),
                       );
                     },
