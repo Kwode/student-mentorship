@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:untitled1/pages/mentee/connected.dart';
+import 'package:untitled1/pages/mentee/mentee_connected.dart';
 import 'package:untitled1/pages/mentee/mentee_explore.dart';
 import '../pages/mentee/connection_requests.dart';
 
