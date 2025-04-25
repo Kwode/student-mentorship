@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 class CreatePostPage extends StatefulWidget {
   final String userId; // Declare the userId parameter
 
-  const CreatePostPage({Key? key, required this.userId})
-    : super(key: key); // Pass userId through constructor
+  const CreatePostPage({Key? key, required this.userId}) : super(key: key); // Pass userId through constructor
 
   @override
   _CreatePostPageState createState() => _CreatePostPageState();
@@ -18,9 +17,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
   // Function to save the post
   Future<void> _savePost() async {
     if (_titleController.text.isEmpty || _dateController.text.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Please fill all fields')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please fill all fields')));
       return;
     }
 
@@ -29,13 +26,10 @@ class _CreatePostPageState extends State<CreatePostPage> {
       'title': _titleController.text,
       'date': _dateController.text,
       'userId': widget.userId, // Use the passed userId
-      'userName':
-          'User ${widget.userId}', // Optional: Use user ID or name for avatar
+      'userName': 'User ${widget.userId}', // Optional: Use user ID or name for avatar
     });
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Post added successfully')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Post added successfully')));
     Navigator.pop(context); // Return to the posts page
   }
 
@@ -56,7 +50,10 @@ class _CreatePostPageState extends State<CreatePostPage> {
               decoration: InputDecoration(labelText: 'Date'),
             ),
             Spacer(),
-            ElevatedButton(onPressed: _savePost, child: Text('Save Post')),
+            ElevatedButton(
+              onPressed: _savePost,
+              child: Text('Save Post'),
+            ),
           ],
         ),
       ),

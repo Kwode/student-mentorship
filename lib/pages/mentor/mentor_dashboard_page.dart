@@ -14,7 +14,6 @@ class MentorDashboardPage extends StatefulWidget {
 class _MentorDashboardPageState extends State<MentorDashboardPage> {
   void signOUt() {
     FirebaseAuth.instance.signOut();
-    Navigator.pushNamed(context, "welcome");
   }
 
   String? userId = FirebaseAuth.instance.currentUser?.uid;
@@ -60,9 +59,11 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0),
                   child: ListTile(
-                    title: Text("HOME", style: TextStyle(color: Colors.white)),
-                    onTap: () {},
-                    leading: Icon(Icons.home, color: Colors.white),
+                    title: Text("POSTS", style: TextStyle(color: Colors.white)),
+                    onTap: () {
+                      Navigator.pushNamed(context, "mentorprofile");
+                    },
+                    leading: Icon(Icons.post_add, color: Colors.white),
                   ),
                 ),
                 Padding(

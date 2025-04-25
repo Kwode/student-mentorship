@@ -1,81 +1,78 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:random_avatar/random_avatar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore package
+import 'package:random_avatar/random_avatar.dart'; // RandomAvatar package
 
 class Posts extends StatelessWidget {
-  final List<Map<String, String>> posts = [
-    {
-      "title": "Time \nManagement",
-      "date": "13/02/2024",
-      "image": "lib/images/avatar1.jpeg",
-    },
-    {
-      "title": "Planning \nEffectively",
-      "date": "13/01/2024",
-      "image": "lib/images/avatar2.jpg",
-    },{
-      "title": "Planning \nEffectively",
-      "date": "13/01/2024",
-      "image": "lib/images/avatar2.jpg",
-    },{
-      "title": "Planning \nEffectively",
-      "date": "13/01/2024",
-      "image": "lib/images/avatar2.jpg",
-    },{
-      "title": "Planning \nEffectively",
-      "date": "13/01/2024",
-      "image": "lib/images/avatar2.jpg",
-    },{
-      "title": "Planning \nEffectively",
-      "date": "13/01/2024",
-      "image": "lib/images/avatar2.jpg",
-    },
-    // Add more posts here...
-  ];
-
   @override
   Widget build(BuildContext context) {
-          return ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              final post = posts[index];
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-              return Container(
-                padding: EdgeInsets.all(10),
-                  margin: EdgeInsets.only(right: 15),
-                  width: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[900],
-                    borderRadius: BorderRadius.circular(15)
+        final posts = snapshot.data!.docs;
+
+        return ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: posts.length,
+          itemBuilder: (context, index) {
+            final post = posts[index];
+            final userName =
+                post['username']; // Get the user's name or UID from the post
+
+            return Container(
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.only(right: 15),
+              width: 200,
+              decoration: BoxDecoration(
+                color: Colors.grey[900],
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        post['title']!,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        post['date']!,
+                        style: TextStyle(
+                          color: Colors.grey[500],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(post["title"]!, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
-
-                            SizedBox(height: 20,),
-
-                            Text(post["date"]!, style: TextStyle(color: Colors.grey[500], fontWeight: FontWeight.bold),),
-                          ],
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 35,
+                        backgroundColor: Colors.transparent,
+                        child: RandomAvatar(
+                          userName, // Generate a random avatar based on the user's name/ID
+                          width: 70,
+                          height: 70,
                         ),
-
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircleAvatar(
-                              radius: 35,
-                              child: RandomAvatar("saytoonz",width: 150, height: 150),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                );
-            },
-          );
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

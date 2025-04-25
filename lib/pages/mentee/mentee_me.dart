@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled1/pages/mentee/mentee_profile.dart';
-
 import '../login_page.dart';
 import 'mentee_create_dart.dart';
 import 'mentee_interests.dart';
@@ -115,7 +114,7 @@ class _MenteeMeState extends State<MenteeMe> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreatePostPage(),
+                          builder: (context) => CreatePostPage(userId: '',),
                         ),
                       );
                     },
