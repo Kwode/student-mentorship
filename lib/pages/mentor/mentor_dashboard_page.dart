@@ -17,6 +17,7 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
   }
 
   String? userId = FirebaseAuth.instance.currentUser?.uid;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +112,13 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
           );
 
           TextEditingController about = TextEditingController();
-          TextEditingController level = TextEditingController();
-          TextEditingController dept = TextEditingController();
+          TextEditingController grad = TextEditingController();
+          TextEditingController title = TextEditingController();
 
           Future<void> saveDetails() async {
+            setState(() {
+              _isLoading = true;
+            });
             try {
               await FirebaseFirestore.instance
                   .collection("userinfo")
@@ -122,14 +126,29 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
                   .update({
                     "name": name.text.trim(),
                     "aboutMe": about.text.trim(),
+                    "title": title.text.trim(),
+                    "graduationYear": grad.text.trim(),
                   });
 
-              await FirebaseFirestore.instance
-                  .collection("userinfo")
-                  .doc(FirebaseAuth.instance.currentUser?.uid)
-                  .set({"level": level.text.trim(), "dept": dept.text.trim()});
+              // await FirebaseFirestore.instance
+              //     .collection("userinfo")
+              //     .doc(FirebaseAuth.instance.currentUser?.uid)
+              //     .set({"level": level.text.trim(), "dept": dept.text.trim()});
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Details Successfully Saved!"),
+                  backgroundColor: Colors.green,
+                ),
+              );
             } on FirebaseAuthException catch (e) {
               print(e.message);
+            } finally {
+              if (mounted) {
+                setState(() {
+                  _isLoading = false;
+                });
+              }
             }
           }
 
@@ -178,6 +197,7 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
                       SizedBox(height: 5),
 
                       TextField(
+                        controller: about,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: "Talk a little about yourself",
@@ -207,6 +227,7 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
                       SizedBox(height: 5),
 
                       TextField(
+                        controller: grad,
                         keyboardType: TextInputType.number,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
@@ -234,6 +255,7 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
                       SizedBox(height: 5),
 
                       TextField(
+                        controller: title,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: "Your Title?",
@@ -253,7 +275,10 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
 
                   SizedBox(height: 40),
 
-                  Buttons(text: "Save", onTap: saveDetails),
+                  Buttons(
+                    text: _isLoading ? "Saving..." : "Save",
+                    onTap: _isLoading ? null : saveDetails,
+                  ),
                 ],
               ),
             ),
