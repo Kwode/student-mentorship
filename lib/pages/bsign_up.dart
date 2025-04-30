@@ -60,11 +60,6 @@ class _BsignUpState extends State<BsignUp> {
 
         // Send verification email
         await userCred.user!.sendEmailVerification();
-
-        // Example placeholder avatar URL (customize or use an avatar generator)
-        const defaultAvatarUrl =
-            "https://api.dicebear.com/7.x/thumbs/svg?seed=newuser";
-
         await FirebaseFirestore.instance
             .collection("userinfo")
             .doc(userCred.user!.uid)
@@ -75,15 +70,11 @@ class _BsignUpState extends State<BsignUp> {
               "owner": userCred.user!.uid.trim(),
               "category": _selectedCategory,
               "gender": _selectedGender,
-              "avatar": defaultAvatarUrl,
-              "emailVerified": false,
             });
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              "Account created!",
-            ),
+            content: Text("Account created!"),
             backgroundColor: Colors.green,
           ),
         );

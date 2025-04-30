@@ -18,7 +18,6 @@ class MentorProfilePage extends StatelessWidget {
         backgroundColor: Colors.black,
         title: Text("Profile", style: TextStyle(color: Colors.white)),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: FutureBuilder(
@@ -29,7 +28,9 @@ class MentorProfilePage extends StatelessWidget {
                   .get(),
           builder: (context, snapshots) {
             if (snapshots.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator(color: Colors.blue));
+              return Center(
+                child: CircularProgressIndicator(color: Colors.blue),
+              );
             }
             if (!snapshots.hasData || !snapshots.data!.exists) {
               return Center(
@@ -39,35 +40,100 @@ class MentorProfilePage extends StatelessWidget {
                 ),
               );
             }
+
+            var userData = snapshots.data!.data()!;
+            List<dynamic> interests = userData["preferences"] ?? [];
+
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    "${snapshots.data?["name"]}",
-                    style: GoogleFonts.tiroTamil(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          child: RandomAvatar(userData["imageUrl"]),
+                        ),
+                        SizedBox(height: 50),
+                        Text(
+                          userData["name"] ?? '',
+                          style: GoogleFonts.tiroTamil(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                          ),
+                        ),
+                        Text(
+                          userData["title"] ?? '',
+                          style: GoogleFonts.tiroTamil(
+                            color: Colors.grey[500],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  subtitle: Text(
-                    // "${snapshots.data?["dept"]} - ${snapshots.data?["level"]}",
-                    "Hey",
-                    style: GoogleFonts.tiroTamil(color: Colors.grey[500]),
-                  ),
-                  trailing: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: CircleAvatar(
-                      radius: 50,
-                      child: RandomAvatar(
-                        snapshots.data?["imageUrl"],
-                        width: 80,
-                        height: 80,
+                ),
+                SizedBox(height: 70),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "About Me",
+                        style: GoogleFonts.tiroTamil(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 20),
+                      Text(
+                        userData["aboutMe"] ?? '',
+                        style: GoogleFonts.tiroTamil(
+                          color: Colors.grey[500],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Interests",
+                        style: GoogleFonts.tiroTamil(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: interests.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              leading: Icon(Icons.star, color: Colors.blue),
+                              title: Text(
+                                interests[index],
+                                style: GoogleFonts.tiroTamil(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

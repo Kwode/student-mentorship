@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/firebase_options.dart';
 import 'package:untitled1/pages/bsign_up.dart';
@@ -15,7 +16,6 @@ import 'package:untitled1/pages/mentor/mentor_navpage.dart';
 import 'package:untitled1/pages/sign_up_page.dart';
 import 'package:untitled1/pages/welcome_page.dart';
 import 'package:untitled1/pages/profile_setup_page.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
@@ -36,7 +36,9 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: Colors.blue));
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.blue),
+            );
           }
           if (snapshot.hasData && snapshot.data != null) {
             // User is logged in, check role
@@ -50,7 +52,9 @@ class MyApp extends StatelessWidget {
                       .get(),
               builder: (context, userSnapshot) {
                 if (userSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(color: Colors.blue));
+                  return const Center(
+                    child: CircularProgressIndicator(color: Colors.blue),
+                  );
                 }
                 if (userSnapshot.hasData && userSnapshot.data!.exists) {
                   String category = userSnapshot.data!.get("category");
@@ -62,7 +66,7 @@ class MyApp extends StatelessWidget {
               },
             );
           }
-          return LoginPage();
+          return WelcomePage();
         },
       ),
 
@@ -71,7 +75,7 @@ class MyApp extends StatelessWidget {
         "signup": (context) => SignUpPage(),
         "bsign": (context) => BsignUp(),
         "profile": (context) => ProfileSetupPage(),
-        "dash": (context) => DashboardPage(),
+        "dash": (context) => RoutingPage(),
         "mentor": (context) => MentorNavpage(),
         "mentee": (context) => MenteeNavigation(),
         "welcome": (context) => WelcomePage(),
