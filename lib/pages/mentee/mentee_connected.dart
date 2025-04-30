@@ -87,14 +87,13 @@ class Connected extends StatelessWidget {
                     if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
                       return const ListTile(
                         title: Text(
-                          "User not found",
+                          " ",
                           style: TextStyle(color: Colors.white),
                         ),
                       );
                     }
 
-                    final data =
-                        userSnapshot.data!.data() as Map<String, dynamic>;
+                    final data = userSnapshot.data!.data() as Map<String, dynamic>;
                     final name = data['name'] ?? 'No Name';
                     final category = data['category'] ?? '';
                     final image = data['imageUrl'] ?? 'saytoonz';

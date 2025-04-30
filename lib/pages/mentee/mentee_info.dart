@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:random_avatar/random_avatar.dart';
 
-import 'category_selection.dart';
+import '../../components/category_selection.dart';
 
 class MenteeInfo extends StatefulWidget {
   final String userId;
@@ -24,8 +24,8 @@ class _MenteeInfoState extends State<MenteeInfo> {
   String? level;
   String? aboutMe;
   List<String>? goals;
-  bool notConnected = true; // track if the request has been sent
   late final String userId;
+  String requestStatus = 'none'; // 'none', 'pending', or 'connected'
 
   @override
   void initState() {
@@ -36,11 +36,10 @@ class _MenteeInfoState extends State<MenteeInfo> {
 
   Future<void> fetchUserData() async {
     try {
-      final doc =
-          await FirebaseFirestore.instance
-              .collection('userinfo')
-              .doc(userId)
-              .get();
+      final doc = await FirebaseFirestore.instance
+          .collection('userinfo')
+          .doc(userId)
+          .get();
       if (doc.exists && doc.data() != null) {
         final data = doc.data()!;
         setState(() {
@@ -71,25 +70,29 @@ class _MenteeInfoState extends State<MenteeInfo> {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) return;
 
-    final querySnapshot =
-        await FirebaseFirestore.instance
-            .collection('requests')
-            .where('from', isEqualTo: currentUser.uid)
-            .where('to', isEqualTo: userId)
-            .limit(1)
-            .get();
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('requests')
+        .where('from', isEqualTo: currentUser.uid)
+        .where('to', isEqualTo: userId)
+        .limit(1)
+        .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      final requestData =
-          querySnapshot.docs.first.data() as Map<String, dynamic>;
-      final requestStatus = requestData['status'];
+      final requestData = querySnapshot.docs.first.data() as Map<String, dynamic>;
+      final status = requestData['status'];
 
       setState(() {
-        notConnected = requestStatus == 'pending' ? false : true;
+        if (status == 'pending') {
+          requestStatus = 'pending';
+        } else if (status == 'accepted') {
+          requestStatus = 'connected';
+        } else {
+          requestStatus = 'none';
+        }
       });
     } else {
       setState(() {
-        notConnected = true; // No request found, can send one
+        requestStatus = 'none';
       });
     }
   }
@@ -108,12 +111,12 @@ class _MenteeInfoState extends State<MenteeInfo> {
     });
 
     setState(() {
-      notConnected = false; // Update UI to show "Request sent"
+      requestStatus = 'pending'; // Immediately update UI
     });
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Connection request sent")));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Connection request sent")),
+    );
   }
 
   @override
@@ -162,8 +165,8 @@ class _MenteeInfoState extends State<MenteeInfo> {
                       children: [
                         Text(
                           title ?? '',
-                          style: TextStyle(
-                            color: const Color(0xFF687EFF),
+                          style: const TextStyle(
+                            color: Color(0xFF687EFF),
                             fontSize: 18,
                           ),
                         ),
@@ -180,7 +183,7 @@ class _MenteeInfoState extends State<MenteeInfo> {
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: Row(
                             children: [
-                              if (notConnected)
+                              if (requestStatus == 'none')
                                 OutlinedButton.icon(
                                   onPressed: () async {
                                     await sendConnectionRequest(userId);
@@ -190,7 +193,7 @@ class _MenteeInfoState extends State<MenteeInfo> {
                                     color: Color(0xFF687EFF),
                                   ),
                                   label: const Text(
-                                    'Send request',
+                                    'Send Request',
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   style: OutlinedButton.styleFrom(
@@ -200,17 +203,29 @@ class _MenteeInfoState extends State<MenteeInfo> {
                                     ),
                                   ),
                                 )
-                              else
+                              else if (requestStatus == 'pending')
                                 const Text(
-                                  'Request sent',
+                                  'Pending...',
                                   style: TextStyle(
-                                    color: Color(0xFF687EFF),
+                                    color: Color(0xFF98E4FF),
                                     fontSize: 16,
                                   ),
-                                ),
-                              const SizedBox(width: 15),
+                                )
+                              else if (requestStatus == 'connected')
+                                  const Text(
+                                    'Connected',
+                                    style: TextStyle(
+                                      color: Colors.greenAccent,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                              const SizedBox(width: 20),
                               OutlinedButton.icon(
-                                onPressed: () {},
+                                onPressed: requestStatus == 'connected'
+                                    ? () {
+                                  // Open chat page or message
+                                }
+                                    : null,
                                 icon: const Icon(
                                   Icons.message,
                                   color: Color(0xFF687EFF),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled1/components/match_sys.dart';
 import 'package:random_avatar/random_avatar.dart';
-import '../../components/mentee_info.dart';
+import 'mentee_info.dart';
 
 class ExplorePage extends StatefulWidget {
   final String searchQuery;

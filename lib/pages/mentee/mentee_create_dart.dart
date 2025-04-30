@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CreatePostPage extends StatefulWidget {
-  final String userId; // Declare the userId parameter
+  final String userId;
 
-  const CreatePostPage({Key? key, required this.userId})
-    : super(key: key); // Pass userId through constructor
+  const CreatePostPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   _CreatePostPageState createState() => _CreatePostPageState();
@@ -14,29 +13,32 @@ class CreatePostPage extends StatefulWidget {
 class _CreatePostPageState extends State<CreatePostPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController(); // NEW
 
   // Function to save the post
   Future<void> _savePost() async {
-    if (_titleController.text.isEmpty || _dateController.text.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Please fill all fields')));
+    if (_titleController.text.isEmpty ||
+        _dateController.text.isEmpty ||
+        _contentController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill all fields')),
+      );
       return;
     }
 
-    // Save the post to Firestore
     await FirebaseFirestore.instance.collection('posts').add({
       'title': _titleController.text,
       'date': _dateController.text,
-      'userId': widget.userId, // Use the passed userId
-      'userName':
-          'User ${widget.userId}', // Optional: Use user ID or name for avatar
+      'content': _contentController.text, // NEW
+      'userId': widget.userId,
+      'userName': 'User ${widget.userId}',
+      'timestamp': FieldValue.serverTimestamp(), // Optional for sorting
     });
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Post added successfully')));
-    Navigator.pop(context); // Return to the posts page
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Post added successfully')),
+    );
+    Navigator.pop(context);
   }
 
   @override
@@ -54,6 +56,11 @@ class _CreatePostPageState extends State<CreatePostPage> {
             TextField(
               controller: _dateController,
               decoration: InputDecoration(labelText: 'Date'),
+            ),
+            TextField(
+              controller: _contentController,
+              decoration: InputDecoration(labelText: 'Content'),
+              maxLines: 5,
             ),
             Spacer(),
             ElevatedButton(onPressed: _savePost, child: Text('Save Post')),
