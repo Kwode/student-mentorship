@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:random_avatar/random_avatar.dart';
-import 'package:untitled1/components/mentee_info.dart';
+import 'package:untitled1/pages/mentee/mentee_info.dart';
 
 class RequestPage extends StatefulWidget {
   @override

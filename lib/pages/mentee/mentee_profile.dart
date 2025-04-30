@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled1/components/badges.dart';
 import 'package:untitled1/components/category_selection.dart';
 import 'package:random_avatar/random_avatar.dart';
 
@@ -326,10 +327,23 @@ class _MenteeProfileState extends State<MenteeProfile> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Text(
-                      username!,
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                username!,
+                                style: const TextStyle(color: Colors.white, fontSize: 25),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
+
                     const SizedBox(height: 20),
 
 
@@ -353,7 +367,7 @@ class _MenteeProfileState extends State<MenteeProfile> {
                         children: [
                           Text(
                             title!,
-                            style: TextStyle(color: Color(0xFF687EFF), fontSize: 18),
+                            style: TextStyle(color: Color(0xFF687EFF), fontSize: 25),
                           ),
                           SizedBox(height: 5),
                           Text(
@@ -370,7 +384,7 @@ class _MenteeProfileState extends State<MenteeProfile> {
               const SizedBox(height: 20),
               Text(
                 'About Me',
-                style: TextStyle(color: Color(0xFF687EFF), fontSize: 20),
+                style: TextStyle(color: Color(0xFF687EFF), fontSize: 22),
               ),
               const SizedBox(height: 15),
               if (aboutMe == null)
@@ -391,15 +405,23 @@ class _MenteeProfileState extends State<MenteeProfile> {
               else
                 Text(
                   aboutMe!,
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               Text(
                 'Interests',
-                style: TextStyle(color: Color(0xFF687EFF), fontSize: 20),
+                style: TextStyle(color: Color(0xFF687EFF), fontSize: 22),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               CategorySelection(),
+              const SizedBox(height: 30),
+              Text(
+                'Badges',
+                style: TextStyle(color: Color(0xFF687EFF), fontSize: 22),
+              ),
+              const SizedBox(height: 10),
+              CurrentBadgeWidget(size: 50.0),
+
 
             ],
           ),

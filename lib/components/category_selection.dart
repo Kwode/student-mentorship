@@ -48,7 +48,7 @@ class _CategorySelectionState extends State<CategorySelection> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     decoration: BoxDecoration(
-                      color: isSelected ? Colors.blue : Colors.grey[900],
+                      color: isSelected ? Color(0xFF80B3FF) : Colors.grey[900],
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
