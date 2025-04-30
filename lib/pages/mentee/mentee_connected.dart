@@ -45,13 +45,11 @@ class Connected extends StatelessWidget {
             }
 
             final toConnections = toSnapshot.data?.docs ?? [];
-
-            // Combine both connections (and avoid duplicates)
             final allConnections =
                 [
                   ...fromConnections.map((doc) => doc['to']),
                   ...toConnections.map((doc) => doc['from']),
-                ].toSet().toList(); // remove duplicates
+                ].toSet().toList();
 
             if (allConnections.isEmpty) {
               return const Center(
@@ -102,6 +100,8 @@ class Connected extends StatelessWidget {
                     return Card(
                       color: Colors.grey[900],
                       child: ListTile(
+                        onTap:
+                            () => Navigator.pushNamed(context, "mentorprofile"),
                         leading: CircleAvatar(
                           child: RandomAvatar(image, width: 40, height: 40),
                         ),
@@ -113,20 +113,22 @@ class Connected extends StatelessWidget {
                           category.toUpperCase(),
                           style: const TextStyle(color: Colors.grey),
                         ),
-                        trailing: const Icon(Icons.chat, color: Colors.white70),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => MenteeChatRoom(
-                                    username: name,
-                                    image: image,
-                                    receiverId: userId,
-                                  ),
-                            ),
-                          );
-                        },
+                        trailing: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => MenteeChatRoom(
+                                      username: name,
+                                      image: image,
+                                      receiverId: userId,
+                                    ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.message, color: Colors.white70),
+                        ),
                       ),
                     );
                   },
