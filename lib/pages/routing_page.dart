@@ -7,15 +7,15 @@ import 'package:untitled1/pages/mentee/mentee_me.dart';
 import 'package:untitled1/pages/mentee/mentee_navpage.dart';
 import 'package:untitled1/pages/mentor/mentor_navpage.dart';
 
-class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+class RoutingPage extends StatefulWidget {
+  const RoutingPage({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<RoutingPage> createState() => _RoutingPageState();
 }
 
 
-class _DashboardPageState extends State<DashboardPage> {
+class _RoutingPageState extends State<RoutingPage> {
   Future<String?> getUserCategory() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -32,22 +32,6 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   title: Text("Home"),
-      //   actions: [
-      //     IconButton(
-      //         onPressed: () async {
-      //           await FirebaseAuth.instance.signOut();
-      //           if (!mounted) return; // Prevents errors if widget is disposed
-      //           Navigator.pushReplacementNamed(context, "welcome"); // Ensure a fresh start
-      //         },
-      //         icon: Icon(Icons.logout)
-      //     ),
-      //   ],
-      // ),
       body: FutureBuilder(
         future: getUserCategory(),
         builder: (context, snapshot) {
