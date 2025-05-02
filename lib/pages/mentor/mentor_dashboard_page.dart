@@ -73,6 +73,7 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
                   child: ListTile(
                     title: Text("TASKS", style: TextStyle(color: Colors.white)),
                     onTap: () {
+                      Navigator.pop(context);
                       Navigator.pushNamed(context, "mentortask");
                     },
                     leading: Icon(Icons.work, color: Colors.white),
