@@ -40,9 +40,9 @@ class _MentorPostPageState extends State<MentorPostPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Colors.black,
-        title: Text("Your Posts", style: TextStyle(color: Colors.white)),
+        title: const Text("Your Posts", style: TextStyle(color: Colors.white)),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream:
@@ -55,7 +55,7 @@ class _MentorPostPageState extends State<MentorPostPage> {
                 .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           final posts = snapshot.data!.docs;
@@ -64,6 +64,12 @@ class _MentorPostPageState extends State<MentorPostPage> {
             itemCount: posts.length,
             itemBuilder: (context, index) {
               final post = posts[index];
+              // Parse the date string to a DateTime object
+              DateTime postDate = DateTime.parse(post['date']);
+              // Format the date to a more readable format
+              String formattedDate =
+                  "${postDate.day}/${postDate.month}/${postDate.year}";
+
               return ListTile(
                 leading: CircleAvatar(
                   backgroundColor: Colors.transparent,
@@ -78,14 +84,14 @@ class _MentorPostPageState extends State<MentorPostPage> {
                 ),
                 title: Text(
                   post['title'],
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
                 subtitle: Text(
-                  post['date'],
-                  style: TextStyle(color: Colors.grey[700]),
+                  formattedDate, // Display the formatted date
+                  style: const TextStyle(color: Colors.grey),
                 ),
                 trailing: IconButton(
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                   onPressed: () => _deletePost(post.id), // Delete the post
                 ),
                 onTap: () {
@@ -98,15 +104,8 @@ class _MentorPostPageState extends State<MentorPostPage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreatePostPage(userId: _userId),
-            ),
-          );
-        }, // Open create post page
-        child: Icon(Icons.add, color: Colors.white),
+        onPressed: _createPost, // Open create post page
+        child: const Icon(Icons.add, color: Colors.white),
         tooltip: 'Create Post',
       ),
     );

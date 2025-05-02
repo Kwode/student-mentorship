@@ -4,15 +4,20 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Firebase Firestore pac
 import 'package:random_avatar/random_avatar.dart'; // RandomAvatar package
 
 class Posts extends StatelessWidget {
+  final Function(String title, String content)
+  onPostTap; // Callback for post tap
+
+  const Posts({Key? key, required this.onPostTap}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('posts').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshots) {
-        if (!snapshots.hasData) {
+        if (snapshots.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         }
-        if (!snapshots.hasData) {
+        if (!snapshots.hasData || snapshots.data!.docs.isEmpty) {
           return Center(
             child: Text("No data found", style: TextStyle(color: Colors.white)),
           );
@@ -25,58 +30,66 @@ class Posts extends StatelessWidget {
           itemCount: posts.length,
           itemBuilder: (context, index) {
             final post = posts[index];
-            final userName =
-                post['userName']; // Get the user's name or UID from the post
 
-            return Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.only(right: 15),
-              width: 200,
-              decoration: BoxDecoration(
-                color: Colors.grey[900],
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        post['title']!,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+            // Ensure that the title and content are not null
+            final title = post['title'] ?? 'No Title';
+            final content = post['content'] ?? 'No Content';
+            final date = post['date'] ?? 'No Date';
+
+            return GestureDetector(
+              onTap: () {
+                // Call the onPostTap function with the post details
+                onPostTap(title, content);
+              },
+              child: Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.only(right: 15),
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.grey[900],
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow:
+                                TextOverflow.ellipsis, // Handle long titles
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            date,
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 20),
-                      Text(
-                        post['date']!,
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ), // Add space between text and avatar
+                    CircleAvatar(
+                      radius: 35,
+                      backgroundColor: Colors.transparent,
+                      child: RandomAvatar(
+                        FirebaseAuth.instance.currentUser!.uid,
+                        width: 70,
+                        height: 70,
                       ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 35,
-                        backgroundColor: Colors.transparent,
-                        child: RandomAvatar(
-                          FirebaseAuth
-                              .instance
-                              .currentUser!
-                              .uid, // Generate a random avatar based on the user's name/ID
-                          width: 70,
-                          height: 70,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             );
           },
