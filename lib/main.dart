@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:untitled1/firebase_options.dart';
 import 'package:untitled1/pages/bsign_up.dart';
 import 'package:untitled1/pages/mentor/mentor_post_page.dart';
+import 'package:untitled1/pages/mentor/mentor_task_page.dart';
 import 'package:untitled1/pages/routing_page.dart';
 import 'package:untitled1/pages/login_page.dart';
 import 'package:untitled1/pages/mentee/mentee_me.dart';
@@ -44,12 +45,12 @@ class MyApp extends StatelessWidget {
             // User is logged in, check role
             return FutureBuilder<DocumentSnapshot>(
               future:
-                  FirebaseFirestore.instance
-                      .collection(
-                        "userinfo",
-                      ) // Ensure this matches Firestore collection
-                      .doc(snapshot.data!.uid)
-                      .get(),
+              FirebaseFirestore.instance
+                  .collection(
+                "userinfo",
+              ) // Ensure this matches Firestore collection
+                  .doc(snapshot.data!.uid)
+                  .get(),
               builder: (context, userSnapshot) {
                 if (userSnapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
         "mentordash": (context) => MentorDashboardPage(),
         "mentorprofile": (context) => MentorProfilePage(),
         "mentorpost": (context) => MentorPostPage(),
+        "mentortask": (context) => TasksPage(),
       },
     );
   }

@@ -5,7 +5,7 @@ class CreatePostPage extends StatefulWidget {
   final String userId; // Declare the userId parameter
 
   const CreatePostPage({Key? key, required this.userId})
-    : super(key: key); // Pass userId through constructor
+      : super(key: key); // Pass userId through constructor
 
   @override
   _CreatePostPageState createState() => _CreatePostPageState();
@@ -30,7 +30,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
       'date': _dateController.text,
       'userId': widget.userId, // Use the passed userId
       'userName':
-          'User ${widget.userId}', // Optional: Use user ID or name for avatar
+      'User ${widget.userId}', // Optional: Use user ID or name for avatar
     });
 
     ScaffoldMessenger.of(
@@ -80,7 +80,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 if (pickedDate != null) {
                   setState(() {
                     _dateController.text =
-                        "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                    "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
                   });
                 }
               },

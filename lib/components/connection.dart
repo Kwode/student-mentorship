@@ -80,7 +80,7 @@ class _ConnectionSelection extends State<Connections> {
                               ),
                               decoration: BoxDecoration(
                                 color:
-                                    isSelected ? Colors.blue : Colors.grey[900],
+                                    isSelected ? Color(0xFF687EFF) : Colors.grey[900],
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(

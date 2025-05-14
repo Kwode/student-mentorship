@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:random_avatar/random_avatar.dart';
 
+import '../../components/badges.dart';
 import '../../components/category_selection.dart';
 
 class MenteeInfo extends StatefulWidget {
@@ -267,6 +268,8 @@ class _MenteeInfoState extends State<MenteeInfo> {
               ),
               const SizedBox(height: 20),
               CategorySelection(),
+              const SizedBox(height: 20),
+              CurrentBadgeWidget(size: 50.0),
             ],
           ),
         ),

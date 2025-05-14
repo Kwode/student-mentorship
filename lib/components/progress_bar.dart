@@ -49,7 +49,7 @@ class GoalProgressBar extends StatelessWidget {
         ),
         SizedBox(height: 10),
         ClipRRect(
-          borderRadius: BorderRadius.circular(10), // 👈 set the roundness here
+          borderRadius: BorderRadius.circular(10), //
           child: LinearProgressIndicator(
             value: progress,
             backgroundColor: Colors.grey[300],

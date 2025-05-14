@@ -36,7 +36,7 @@ class WelcomePage extends StatelessWidget {
                 children: [
                   Text(
                     textAlign: TextAlign.center,
-                    "Where Connection Fuels Success.",
+                    "MentorConnect",
                     style: GoogleFonts.tiroTamil(
                       color: Colors.white,
                       fontSize: 39,

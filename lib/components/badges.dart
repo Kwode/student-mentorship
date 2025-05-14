@@ -17,9 +17,9 @@ class _CurrentBadgeWidgetState extends State<CurrentBadgeWidget> with SingleTick
   String? _currentBadge;
 
   final Map<String, String> badgeImages = {
-    'Rising Star ⭐': 'assets/badges/rising_star.png',
-    'Achiever 🏆': 'assets/badges/achiever.png',
-    'Master 🥇': 'assets/badges/master.png',
+    'Rising Star ⭐': 'lib/assets/badges/rising_star.png',
+    'Achiever 🏆': 'lib/assets/badges/achiever.png',
+    'Master 🥇': 'lib/assets/badges/master.png',
   };
 
   final Map<String, Color> badgeGlowColors = {

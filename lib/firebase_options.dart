@@ -17,29 +17,17 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -57,6 +45,42 @@ class DefaultFirebaseOptions {
     appId: '1:184866803626:android:86267bc89a20e243cb65d3',
     messagingSenderId: '184866803626',
     projectId: 'student-mentorship',
+    storageBucket: 'student-mentorship.firebasestorage.app',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBqUIHoKW_W8j21i3CHkrZbc6wzsUeL7dE',
+    appId: '1:184866803626:web:3eb7301fc713c085cb65d3',
+    messagingSenderId: '184866803626',
+    projectId: 'student-mentorship',
+    authDomain: 'student-mentorship.firebaseapp.com',
+    storageBucket: 'student-mentorship.firebasestorage.app',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDK5g2L9vfrrvbV-OVnqVbGc1co1QsyN8M',
+    appId: '1:184866803626:ios:079630ab7c9ff682cb65d3',
+    messagingSenderId: '184866803626',
+    projectId: 'student-mentorship',
+    storageBucket: 'student-mentorship.firebasestorage.app',
+    iosBundleId: 'com.example.untitled1',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDK5g2L9vfrrvbV-OVnqVbGc1co1QsyN8M',
+    appId: '1:184866803626:ios:079630ab7c9ff682cb65d3',
+    messagingSenderId: '184866803626',
+    projectId: 'student-mentorship',
+    storageBucket: 'student-mentorship.firebasestorage.app',
+    iosBundleId: 'com.example.untitled1',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBqUIHoKW_W8j21i3CHkrZbc6wzsUeL7dE',
+    appId: '1:184866803626:web:5f869a4cb510b4aecb65d3',
+    messagingSenderId: '184866803626',
+    projectId: 'student-mentorship',
+    authDomain: 'student-mentorship.firebaseapp.com',
     storageBucket: 'student-mentorship.firebasestorage.app',
   );
 

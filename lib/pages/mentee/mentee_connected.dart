@@ -118,7 +118,7 @@ class Connected extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder:
-                                    (context) => MenteeChatRoom(
+                                    (context) => ChatRoom(
                                       username: name,
                                       image: image,
                                       receiverId: userId,
