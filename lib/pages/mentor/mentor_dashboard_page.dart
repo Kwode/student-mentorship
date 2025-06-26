@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:untitled1/components/buttons.dart';
 
+import '../welcome_page.dart';
+
 class MentorDashboardPage extends StatefulWidget {
   const MentorDashboardPage({super.key});
 
@@ -12,9 +14,6 @@ class MentorDashboardPage extends StatefulWidget {
 }
 
 class _MentorDashboardPageState extends State<MentorDashboardPage> {
-  void signOUt() {
-    FirebaseAuth.instance.signOut();
-  }
 
   String? userId = FirebaseAuth.instance.currentUser?.uid;
   bool _isLoading = false;
@@ -86,7 +85,16 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
               padding: const EdgeInsets.only(left: 25.0),
               child: ListTile(
                 title: Text("SIGN OUT", style: TextStyle(color: Colors.white)),
-                onTap: signOUt,
+                onTap: () async {
+                  Navigator.pop(context); // Close drawer
+                  await FirebaseAuth.instance.signOut();
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const WelcomePage()),
+                        (route) => false,
+                  );
+                },
                 leading: Icon(Icons.logout, color: Colors.white),
               ),
             ),

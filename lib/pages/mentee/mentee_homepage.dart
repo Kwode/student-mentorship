@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:untitled1/components/category_selection.dart';
+import 'package:untitled1/pages/mentee/mentee_me.dart';
 import 'package:untitled1/pages/posts.dart';
 import 'package:untitled1/pages/welcome_page.dart';
 
@@ -69,7 +70,7 @@ class _MenteeHomePageState extends State<MenteeHomepage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const WelcomePage()),
+                        MaterialPageRoute(builder: (context) => const MenteeMe()),
                       );
                     },
                     child: CircleAvatar(

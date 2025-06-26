@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled1/pages/mentee/mentee_profile.dart';
 import 'package:untitled1/pages/mentee/mentee_tasks.dart';
 import '../login_page.dart';
+import '../welcome_page.dart';
 import 'mentee_create_dart.dart';
 import 'mentee_interests.dart';
 
@@ -129,13 +130,20 @@ class _MenteeMeState extends State<MenteeMe> {
               ListTile(
                 leading: Icon(Icons.logout, color: Colors.white),
                 title: Text(
-                  'Log out',
+                  'Log Out',
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
-                onTap: () {
-                  Navigator.pop(context); // Close drawer
-                  FirebaseAuth.instance.signOut();
-                },
+                  onTap: () async {
+                    Navigator.pop(context); // Close drawer
+                    await FirebaseAuth.instance.signOut();
+
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const WelcomePage()),
+                          (route) => false,
+                    );
+                  }
+
               ),
             ],
           ),
