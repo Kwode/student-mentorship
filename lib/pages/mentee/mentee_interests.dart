@@ -28,15 +28,16 @@ class _MenteeInterestsState extends State<MenteeInterestsPage> {
     if (userId == null) return;
 
     final doc = await FirebaseFirestore.instance.collection('userinfo').doc(userId).get();
-    if (doc.exists && doc.data() != null) {
-      final data = doc.data()!;
-      final List<dynamic> interestList = data['preferences'] ?? [];
+    final data = doc.data();
+    if (data == null) return;
 
-      setState(() {
-        interests = interestList.map((e) => e.toString()).toList();
-      });
-    }
+    final List<dynamic> interestList = data['preferences'] ?? [];
+
+    setState(() {
+      interests = interestList.map((e) => e.toString()).toList();
+    });
   }
+
 
 
   @override

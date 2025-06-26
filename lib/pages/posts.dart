@@ -66,14 +66,6 @@ class Posts extends StatelessWidget {
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          content,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.white70),
-                        ),
-                        SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

@@ -71,9 +71,12 @@ class _MentorDashboardPageState extends State<MentorDashboardPage> {
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0),
                   child: ListTile(
-                    title: Text("HOME", style: TextStyle(color: Colors.white)),
-                    onTap: () {},
-                    leading: Icon(Icons.home, color: Colors.white),
+                    title: Text("TASKS", style: TextStyle(color: Colors.white)),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, "mentortask");
+                    },
+                    leading: Icon(Icons.task, color: Colors.white),
                   ),
                 ),
               ],
