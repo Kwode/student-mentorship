@@ -14,20 +14,19 @@ class BsignUp extends StatefulWidget {
 
 class _BsignUpState extends State<BsignUp> {
   final _formKey = GlobalKey<FormState>();
-  bool _isObscured = true;
+  bool _isPasswordObscured = true;
+  bool _isConfirmPasswordObscured = true; // Separate variable for confirm password
 
-  //controllers for text fields
+  // Controllers for text fields
   final TextEditingController _fullName = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
-  // final TextEditingController _level = TextEditingController();
-  // final TextEditingController _dept = TextEditingController();
   final TextEditingController _dob = TextEditingController();
   DateTime? _selectedDate;
 
   String? _selectedGender;
-  String? _selectedCategory; //Default form selection
+  String? _selectedCategory; // Default form selection
 
   @override
   void dispose() {
@@ -52,11 +51,10 @@ class _BsignUpState extends State<BsignUp> {
       }
 
       try {
-        final userCred = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-              email: _email.text.trim(),
-              password: _password.text.trim(),
-            );
+        final userCred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _email.text.trim(),
+          password: _password.text.trim(),
+        );
 
         // Send verification email
         await userCred.user!.sendEmailVerification();
@@ -64,13 +62,13 @@ class _BsignUpState extends State<BsignUp> {
             .collection("userinfo")
             .doc(userCred.user!.uid)
             .set({
-              "name": _fullName.text.trim(),
-              "email": _email.text.trim(),
-              "date of birth": _dob.text.trim(),
-              "owner": userCred.user!.uid.trim(),
-              "category": _selectedCategory,
-              "gender": _selectedGender,
-            });
+          "name": _fullName.text.trim(),
+          "email": _email.text.trim(),
+          "date of birth": _dob.text.trim(),
+          "owner": userCred.user!.uid.trim(),
+          "category": _selectedCategory,
+          "gender": _selectedGender,
+        });
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -82,8 +80,7 @@ class _BsignUpState extends State<BsignUp> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder:
-                (context) => PreferencesPage(userCategory: _selectedCategory!),
+            builder: (context) => PreferencesPage(userCategory: _selectedCategory!),
           ),
         );
       } on FirebaseAuthException catch (e) {
@@ -101,14 +98,12 @@ class _BsignUpState extends State<BsignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: ListView(
             children: [
               SizedBox(height: 70),
-
               Text(
                 "Create An Account",
                 textAlign: TextAlign.center,
@@ -118,15 +113,13 @@ class _BsignUpState extends State<BsignUp> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               SizedBox(height: 50),
-
               Form(
                 key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    //Full Name
+                    // Full Name
                     TextFormField(
                       style: TextStyle(color: Colors.white),
                       controller: _fullName,
@@ -157,17 +150,15 @@ class _BsignUpState extends State<BsignUp> {
                         return null;
                       },
                     ),
-
                     SizedBox(height: 30),
 
-                    //Email
+                    // Email
                     TextFormField(
                       style: TextStyle(color: Colors.white),
                       controller: _email,
                       decoration: InputDecoration(
                         labelText: "Email",
                         labelStyle: TextStyle(color: Colors.white),
-
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.blue, width: 2),
@@ -186,28 +177,31 @@ class _BsignUpState extends State<BsignUp> {
                         ),
                       ),
                       keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter your email";
+                        }
+                        return null;
+                      },
                     ),
-
                     SizedBox(height: 30),
 
-                    //password
+                    // Password
                     TextFormField(
                       style: TextStyle(color: Colors.white),
                       controller: _password,
-                      obscureText: _isObscured,
+                      obscureText: _isPasswordObscured,
                       decoration: InputDecoration(
                         hintText: "Enter Password",
                         hintStyle: TextStyle(color: Colors.white),
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
-                              _isObscured = !_isObscured;
+                              _isPasswordObscured = !_isPasswordObscured;
                             });
                           },
                           icon: Icon(
-                            _isObscured
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                            _isPasswordObscured ? Icons.visibility : Icons.visibility_off,
                           ),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -234,27 +228,24 @@ class _BsignUpState extends State<BsignUp> {
                         return null;
                       },
                     ),
-
                     SizedBox(height: 30),
 
-                    //confirm password
+                    // Confirm Password
                     TextFormField(
                       style: TextStyle(color: Colors.white),
-                      obscureText: true,
                       controller: _confirmPassword,
+                      obscureText: _isConfirmPasswordObscured,
                       decoration: InputDecoration(
                         hintText: "Confirm Password",
                         hintStyle: TextStyle(color: Colors.white),
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
-                              _isObscured = !_isObscured;
+                              _isConfirmPasswordObscured = !_isConfirmPasswordObscured;
                             });
                           },
                           icon: Icon(
-                            _isObscured
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                            _isConfirmPasswordObscured ? Icons.visibility : Icons.visibility_off,
                           ),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -275,24 +266,21 @@ class _BsignUpState extends State<BsignUp> {
                         ),
                       ),
                       validator: (value) {
-                        if (value == null ||
-                            _password.text != _confirmPassword.text) {
+                        if (value == null || value.isEmpty || value != _password.text) {
                           return "Password does not match";
                         }
                         return null;
                       },
                     ),
-
                     SizedBox(height: 30),
 
-                    //Gender selector
+                    // Gender selector
                     DropdownButtonFormField<String>(
                       style: TextStyle(color: Colors.white),
                       value: _selectedGender,
                       decoration: InputDecoration(
                         labelText: "Select Gender",
                         labelStyle: TextStyle(color: Colors.white),
-
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.blue, width: 2),
@@ -308,30 +296,27 @@ class _BsignUpState extends State<BsignUp> {
                       ),
                       dropdownColor: Colors.black,
                       icon: Icon(Icons.arrow_drop_down_circle_outlined),
-                      items:
-                          ["Male", "Female"].map((category) {
-                            return DropdownMenuItem(
-                              value: category,
-                              child: Text(category),
-                            );
-                          }).toList(),
+                      items: ["Male", "Female"].map((category) {
+                        return DropdownMenuItem(
+                          value: category,
+                          child: Text(category),
+                        );
+                      }).toList(),
                       onChanged: (value) {
                         setState(() {
                           _selectedGender = value!;
                         });
                       },
                     ),
-
                     SizedBox(height: 30),
 
-                    //Dropdown to select mentor or mentee
+                    // Dropdown to select mentor or mentee
                     DropdownButtonFormField<String>(
                       style: TextStyle(color: Colors.white),
                       value: _selectedCategory,
                       decoration: InputDecoration(
                         labelText: "Sign Up As",
                         labelStyle: TextStyle(color: Colors.white),
-
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.blue, width: 2),
@@ -347,23 +332,21 @@ class _BsignUpState extends State<BsignUp> {
                       ),
                       dropdownColor: Colors.black,
                       icon: Icon(Icons.arrow_drop_down_circle_outlined),
-                      items:
-                          ["Mentor", "Mentee"].map((category) {
-                            return DropdownMenuItem(
-                              value: category,
-                              child: Text(category),
-                            );
-                          }).toList(),
+                      items: ["Mentor", "Mentee"].map((category) {
+                        return DropdownMenuItem(
+                          value: category,
+                          child: Text(category),
+                        );
+                      }).toList(),
                       onChanged: (value) {
                         setState(() {
                           _selectedCategory = value!;
                         });
                       },
                     ),
-
                     SizedBox(height: 30),
 
-                    //Date of Birth
+                    // Date of Birth
                     TextFormField(
                       style: TextStyle(color: Colors.white),
                       readOnly: true,
@@ -379,7 +362,7 @@ class _BsignUpState extends State<BsignUp> {
                           setState(() {
                             _selectedDate = pickedDate;
                             _dob.text =
-                                "${pickedDate.year}/${pickedDate.month}/${pickedDate.day}";
+                            "${pickedDate.year}/${pickedDate.month}/${pickedDate.day}";
                           });
                         }
                       },
@@ -401,7 +384,6 @@ class _BsignUpState extends State<BsignUp> {
                         ),
                         suffixIcon: Icon(Icons.calendar_month_outlined),
                       ),
-
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Please Select Date of Birth";
@@ -409,7 +391,6 @@ class _BsignUpState extends State<BsignUp> {
                         return null;
                       },
                     ),
-
                     SizedBox(height: 40),
 
                     Buttons(

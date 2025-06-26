@@ -41,11 +41,11 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCnuaxInQMDeuFdQedOGoZbZnkIgUX7sew',
-    appId: '1:184866803626:android:86267bc89a20e243cb65d3',
-    messagingSenderId: '184866803626',
-    projectId: 'student-mentorship',
-    storageBucket: 'student-mentorship.firebasestorage.app',
+    apiKey: 'AIzaSyA0L8rFcgGU45tyq16FQZZSEIlwp6jyJ6E',
+    appId: '1:258370609341:android:3752f734a87f91e5cd97d4',
+    messagingSenderId: '258370609341',
+    projectId: 'mentorconnect-8eb6f',
+    storageBucket: 'mentorconnect-8eb6f.firebasestorage.app',
   );
 
   static const FirebaseOptions web = FirebaseOptions(
@@ -67,11 +67,11 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDK5g2L9vfrrvbV-OVnqVbGc1co1QsyN8M',
-    appId: '1:184866803626:ios:079630ab7c9ff682cb65d3',
-    messagingSenderId: '184866803626',
-    projectId: 'student-mentorship',
-    storageBucket: 'student-mentorship.firebasestorage.app',
+    apiKey: 'AIzaSyC9buiAKlsKWC5uADg_vfg1ZaYSEzATSRM',
+    appId: '1:258370609341:ios:7616b0b24a83750bcd97d4',
+    messagingSenderId: '258370609341',
+    projectId: 'mentorconnect-8eb6f',
+    storageBucket: 'mentorconnect-8eb6f.firebasestorage.app',
     iosBundleId: 'com.example.untitled1',
   );
 

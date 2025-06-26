@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "184866803626",
-    "project_id": "student-mentorship",
-    "storage_bucket": "student-mentorship.firebasestorage.app"
+    "project_number": "258370609341",
+    "project_id": "mentorconnect-8eb6f",
+    "storage_bucket": "mentorconnect-8eb6f.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:184866803626:android:86267bc89a20e243cb65d3",
+        "mobilesdk_app_id": "1:258370609341:android:3752f734a87f91e5cd97d4",
         "android_client_info": {
           "package_name": "com.example.untitled1"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCnuaxInQMDeuFdQedOGoZbZnkIgUX7sew"
+          "current_key": "AIzaSyA0L8rFcgGU45tyq16FQZZSEIlwp6jyJ6E"
         }
       ],
       "services": {
