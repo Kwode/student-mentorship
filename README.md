@@ -1,16 +1,7 @@
-# untitled1
+# Student Mentorship Application
 
-A new Flutter project.
+The Student Mentorship App is a platform designed to connect students with experienced final-year peers and alumni mentors within their fields of specified interest. The aim of this system is to provide a structured and consistent approach to providing timely guidance and support to students by connecting them with more experienced individuals- who would serve as mentors within a specific field.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+This project was implemented using Flutter and Firebase.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
